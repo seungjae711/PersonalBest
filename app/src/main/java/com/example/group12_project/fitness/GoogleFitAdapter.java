@@ -56,12 +56,13 @@ public class GoogleFitAdapter implements FitnessService {
                     fitnessOptions
             );
         } else {
+            update_daily_steps();
             startRecording();
         }
     }
 
     // subscribe step count for Google to record
-    public void startRecording() {
+    private void startRecording() {
 
         GoogleSignInAccount lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(activity);
 
@@ -71,6 +72,33 @@ public class GoogleFitAdapter implements FitnessService {
         }
 
         // subscribe
+        Fitness.getRecordingClient(activity, lastSignedInAccount)
+                .subscribe(DataType.TYPE_STEP_COUNT_CUMULATIVE)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.i(TAG, "Successfully subscribed!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.i(TAG, "There was a problem subscribing.");
+                    }
+                });
+    }
+
+    // get the update of daily step count
+    public void update_daily_steps() {
+
+        GoogleSignInAccount lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(activity);
+
+        // check if already signed in
+        if (lastSignedInAccount == null) {
+            return;
+        }
+
+        // request data from google
         Fitness.getHistoryClient(activity, lastSignedInAccount)
                 .readDailyTotal(DataType.TYPE_STEP_COUNT_DELTA)
                 .addOnSuccessListener(new OnSuccessListener<DataSet>() {
@@ -80,6 +108,7 @@ public class GoogleFitAdapter implements FitnessService {
                         long total = dataSet.isEmpty() ? 0 :
                                 dataSet.getDataPoints().get(0).getValue(Field.FIELD_STEPS).asInt();
                         Log.d(TAG, "Total steps: " + total);
+                        activity.setStepCount(total);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -89,6 +118,4 @@ public class GoogleFitAdapter implements FitnessService {
                     }
                 });
     }
-
-
 }

@@ -1,0 +1,53 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+
+<TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Recommended Goal:"
+        />
+    <TextView
+        android:id="@+id/recommended"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical" >
+        <Button
+            android:id="@+id/accept_recommended"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:text="Accept"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/set_custom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:clickable="true"
+            android:text="Set Custom Goal"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/cancel_recommended"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:clickable="true"
+            android:text="Cancel"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+</LinearLayout>

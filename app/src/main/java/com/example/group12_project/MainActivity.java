@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.group12_project.fitness.FitnessService;
 import com.example.group12_project.fitness.FitnessServiceFactory;
@@ -70,23 +71,17 @@ public class MainActivity extends AppCompatActivity
         fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
         fitnessService.setup();
 
-        //DELETE   debug use only
-        Button btnUpdateSteps = findViewById(R.id.button);
-        btnUpdateSteps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fitnessService.update_daily_steps();
-            }
-        });
-
-//        runner = new BackgroundStepAsyncTask();
-//        runner.execute(0);
+        // starting async tasks
+        runner = new BackgroundStepAsyncTask();
+        runner.execute(0);
 
 
     }
 
     // async task for update steps on background every 5 seconds
-    private class BackgroundStepAsyncTask extends AsyncTask<Integer, Void, Void> {
+    private class BackgroundStepAsyncTask extends AsyncTask<Integer, Integer, Void> {
+
+        int i;    // DELETE debug value
 
         // update steps every 5 seconds
         @Override
@@ -98,7 +93,15 @@ public class MainActivity extends AppCompatActivity
                     e.printStackTrace();
                 }
                 fitnessService.update_daily_steps();
+                i++;
+                publishProgress(i);
             }
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
+            String message = "Updated" + progress[0].toString();
+            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
         }
     }
 

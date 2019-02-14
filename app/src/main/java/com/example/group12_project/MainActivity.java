@@ -1,5 +1,6 @@
 package com.example.group12_project;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,9 +13,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    public TextView goal, steps, goalString;
+    int numGoal, numSteps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +46,52 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        /*GOAL SETTING*/
+        goalString = findViewById(R.id.goal_string);
+        goal = findViewById(R.id.goal);
+        steps = findViewById(R.id.steps);
+
+        //if user clicks goal they can change to new goal
+        goalString.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v)
+            {
+                launchActivity();
+            }
+        });
+        goal.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v)
+            {
+                launchActivity();
+            }
+        });
+
+        numSteps = Integer.parseInt(steps.getText().toString());
+        numGoal = Integer.parseInt(goal.getText().toString());
+
+        //if steps reached
+        if(numSteps >= numGoal) {
+            Intent newGoalDialog = new Intent(this, GoalDialog.class);
+            startActivityForResult(newGoalDialog, 1);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 1) {
+            if (data.hasExtra("NewGoal")) {
+                TextView goal = findViewById(R.id.goal);
+                goal.setText(data.getStringExtra("NewGoal"));
+            }
+        }
+    }
+
+    public void launchActivity() {
+        Intent intent = new Intent(this, CustomGoal.class);
+        intent.putExtra("CurrGoal", "");
+        startActivityForResult(intent, 1);
     }
 
     @Override

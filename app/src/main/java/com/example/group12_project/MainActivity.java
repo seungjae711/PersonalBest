@@ -1,5 +1,7 @@
 package com.example.group12_project;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -27,6 +29,9 @@ import com.example.group12_project.fitness.GoogleFitAdapter;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private TextView goal, goalString;
+    int numGoal, numSteps;
+
     private String fitnessServiceKey = "GOOGLE_FIT";
     private FitnessService fitnessService;
     private BackgroundStepAsyncTask runner;
@@ -40,14 +45,14 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        /*FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -58,6 +63,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
         // Yixiang's implementation on basic daily steps counting
         daily_steps = findViewById(R.id.daily_steps);
         FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
@@ -66,6 +72,42 @@ public class MainActivity extends AppCompatActivity
                 return new GoogleFitAdapter(mainActivity);
             }
         });
+        
+        //TODO set first goal during first login
+        SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+        SharedPreferences.Editor editor = storedGoal.edit();
+        editor.putString("goal", "5000");
+        editor.apply();
+
+        /*GOAL SETTING*/
+        goalString = findViewById(R.id.goal_string);
+        goal = findViewById(R.id.goal);
+        updateGoal(goal);
+
+        //if user clicks goal they can change to new goal
+        goalString.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v)
+            {
+                launchActivity();
+            }
+        });
+        goal.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v)
+            {
+                launchActivity();
+            }
+        });
+
+        numSteps = Integer.parseInt(getStepCount());
+        numGoal = Integer.parseInt(storedGoal.getString("goal",""));
+
+        //if steps reached
+        //TODO put in inBackground
+        if(numSteps >= numGoal) {
+            Intent newGoalDialog = new Intent(this, GoalDialog.class);
+            startActivityForResult(newGoalDialog, 1);
+            updateGoal(goal);
+        }
 
         // create fitness service
         fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
@@ -74,7 +116,6 @@ public class MainActivity extends AppCompatActivity
         // starting async tasks
         runner = new BackgroundStepAsyncTask();
         runner.execute(0);
-
 
     }
 
@@ -109,20 +150,38 @@ public class MainActivity extends AppCompatActivity
     public void setStepCount(long stepCount) {
         daily_steps.setText(String.valueOf(stepCount));
     }
+    
+    //get daily step count
+    public String getStepCount() {
+        return daily_steps.getText().toString();
+    }
 
     //DELETE not sure what's the usage
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//       If authentication was required during google fit setup, this will be called after the user authenticates
-        if (resultCode == Activity.RESULT_OK) {
+        //if user updates goal
+        if (resultCode == 1) {
+            updateGoal(goal);
+        }
+        //If authentication was required during google fit setup, this will be called after the user authenticates
+        else if (resultCode == Activity.RESULT_OK) {
             if (requestCode == fitnessService.getRequestCode()) {
                 fitnessService.update_daily_steps();
             }
         } else {
             Log.e(TAG, "ERROR, google fit result code: " + resultCode);
         }
+
+    public void updateGoal(TextView goal) {
+        SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+        goal.setText(storedGoal.getString("goal",""));
     }
 
+    public void launchActivity() {
+        Intent intent = new Intent(this, CustomGoal.class);
+        startActivityForResult(intent, 1);
+    }
+    
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

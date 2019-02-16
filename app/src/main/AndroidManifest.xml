@@ -19,6 +19,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".RecommendedGoal"
+            android:label="Recommend Goal"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".CustomGoal"
+            android:label="Custom Goal"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".GoalDialog"
+            android:configChanges="orientation"
+            android:screenOrientation="sensor"
+            android:theme="@style/NoTitleDialog"></activity>
     </application>
 
 </manifest>

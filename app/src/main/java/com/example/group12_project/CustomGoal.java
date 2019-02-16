@@ -1,6 +1,7 @@
 package com.example.group12_project;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -36,22 +37,26 @@ public class CustomGoal extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Enter in a new goal amount", Toast.LENGTH_LONG).show();
                 } else {
                     //2,000 min - 50,000 max
-                    //encourage more steps
+                    //encourage more steps if below min
                     if(Double.parseDouble(custGoal) < minSteps) {
                         Toast.makeText(getApplicationContext(), "You can do at least 2,000 steps! " +
                                 "Try another goal.", Toast.LENGTH_LONG).show();
                     }
-                    //warn of too high a goal
+                    //warn of too high a goal if above max
                     else if (Double.parseDouble(custGoal) > maxSteps) {
                         Toast.makeText(getApplicationContext(), "More than 30,000 is a marathon a day! " +
                                 "Try another goal.", Toast.LENGTH_LONG).show();
                     }
                     //within range
                     else {
-                        custGoal = custom.getText().toString();
                         //if custom goal is accepted, return
+                        SharedPreferences newGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+                        SharedPreferences.Editor goalEditor = newGoal.edit();
+                        custGoal = custom.getText().toString();
+                        goalEditor.putString("goal", custGoal);
+                        goalEditor.apply();;
+
                         Intent returnIntent = new Intent();
-                        returnIntent.putExtra("NewGoal", custGoal);
                         setResult(1, returnIntent);
                         finish();
                     }

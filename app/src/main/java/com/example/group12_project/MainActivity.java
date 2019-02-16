@@ -1,6 +1,7 @@
 package com.example.group12_project;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,8 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -47,11 +49,17 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //TODO set first goal during first login
+        SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+        SharedPreferences.Editor editor = storedGoal.edit();
+        editor.putString("goal", "5000");
+        editor.apply();
 
         /*GOAL SETTING*/
         goalString = findViewById(R.id.goal_string);
-        goal = findViewById(R.id.goal);
         steps = findViewById(R.id.steps);
+        goal = findViewById(R.id.goal);
+        updateGoal(goal);
 
         //if user clicks goal they can change to new goal
         goalString.setOnClickListener(new View.OnClickListener() {
@@ -68,29 +76,33 @@ public class MainActivity extends AppCompatActivity
         });
 
         numSteps = Integer.parseInt(steps.getText().toString());
-        numGoal = Integer.parseInt(goal.getText().toString());
+        numGoal = Integer.parseInt(storedGoal.getString("goal",""));
 
         //if steps reached
+        //TODO put in inBackground
         if(numSteps >= numGoal) {
             Intent newGoalDialog = new Intent(this, GoalDialog.class);
             startActivityForResult(newGoalDialog, 1);
+            updateGoal(goal);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == 1) {
-            if (data.hasExtra("NewGoal")) {
-                TextView goal = findViewById(R.id.goal);
-                goal.setText(data.getStringExtra("NewGoal"));
-            }
+            Toast.makeText(getApplicationContext(), "here", Toast.LENGTH_LONG).show();
+            updateGoal(goal);
         }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void updateGoal(TextView goal) {
+        SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+        goal.setText(storedGoal.getString("goal",""));
     }
 
     public void launchActivity() {
         Intent intent = new Intent(this, CustomGoal.class);
-        intent.putExtra("CurrGoal", "");
         startActivityForResult(intent, 1);
     }
 

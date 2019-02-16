@@ -1,6 +1,7 @@
 package com.example.group12_project;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -13,7 +14,6 @@ public class RecommendedGoal extends AppCompatActivity {
     public Button accept, customGoal, cancel;
     public TextView recommended;
     String recGoal ="";
-    String returnGoal ="";
     int currGoal;
 
 
@@ -28,28 +28,25 @@ public class RecommendedGoal extends AppCompatActivity {
         cancel = (Button) findViewById(R.id.cancel_recommended);
 
         //get current goal and increase by factor of 500
-        Bundle extras = getIntent().getExtras();
-        if (extras == null) {
-            //TODO error message if not receiving goal
-            recommended = findViewById(R.id.recommended);
-            recommended.setText("null");
-        }
-        else {
-            currGoal = Integer.parseInt(extras.getString("CurrGoal"));
-            currGoal += 500;
-            recGoal = String.valueOf(currGoal);
+        SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+        currGoal = Integer.parseInt(storedGoal.getString("goal",""));
+        currGoal += 500;
+        recGoal = String.valueOf(currGoal);
 
-            //show recommended goal
-            recommended = findViewById(R.id.recommended);
-            recommended.setText(recGoal);
-        }
+        //show recommended goal
+        recommended = findViewById(R.id.recommended);
+        recommended.setText(recGoal);
 
         accept.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
                 //if recommended goal is accepted
+                SharedPreferences newGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+                SharedPreferences.Editor goalEditor = newGoal.edit();
+                goalEditor.putString("goal", recGoal);
+                goalEditor.apply();;
+
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("NewGoal", recGoal);
                 setResult(1, returnIntent);
                 finish();
             }
@@ -74,28 +71,18 @@ public class RecommendedGoal extends AppCompatActivity {
         });
     }
 
-    /*
-    @Override
-    public void update(Observable o, Object arg){
-        final int currGoal = (int) arg;
-    }*/
 
     public void launchActivity() {
         Intent intent = new Intent(this, CustomGoal.class);
-        intent.putExtra("CurrGoal", "");
         startActivityForResult(intent, 1);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
-            if (data.hasExtra("NewGoal")) {
-                returnGoal = data.getStringExtra("NewGoal");
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra("NewGoal", returnGoal);
-                setResult(1, returnIntent);
-                finish();
-            }
+            Intent returnIntent = new Intent();
+            setResult(1, returnIntent);
+            finish();
         }
     }
 }

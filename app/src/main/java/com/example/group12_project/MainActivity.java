@@ -29,7 +29,11 @@ import com.example.group12_project.set_goal.GoalDialog;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+        
+    private TextView timerClock;
+    private Button button_start, button_end;
+    private TimerKeeper time;
+    private long ellapsedTimer;
     private String fitnessServiceKey = "GOOGLE_FIT";
     private FitnessService fitnessService;
     private BackgroundStepAsyncTask runner;
@@ -66,6 +70,40 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        
+        /*Start and End Timer Button*/
+        time = new TimerKeeper();
+        timerClock = findViewById(R.id.time);
+
+        // end button needs to be default hidden
+        button_end = findViewById(R.id.endTimer);
+        button_end.setVisibility(View.INVISIBLE);
+
+        button_start = findViewById(R.id.startTimer);
+        button_start.setOnClickListener( new View.OnClickListener(){
+            @Override
+            public void onClick(View v ){
+                // get start time a timer
+                time.setStart();
+                timerClock.setText("Have Fun Stepping!");
+                button_start.setVisibility(View.INVISIBLE);
+                button_end.setVisibility(View.VISIBLE);
+            }
+        });
+
+        button_end.setOnClickListener( new View.OnClickListener(){
+            @Override
+            public void onClick(View v ){
+                // TODO use ellapsed time for stats and average
+                ellapsedTimer = time.getEllapsedTime();
+                button_start.setVisibility(View.VISIBLE);
+                button_end.setVisibility(View.INVISIBLE);
+                timerClock.setText("Time Your Steps!");
+                Toast.makeText(MainActivity.this, Long.toString(ellapsedTimer), Toast.LENGTH_LONG).show();
+            }
+
+        });
+
 
 
         /*GOAL SETTING*/

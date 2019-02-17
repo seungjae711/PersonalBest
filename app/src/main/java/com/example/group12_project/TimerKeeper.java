@@ -1,3 +1,5 @@
+package com.example.group12_project;
+
 public class TimerKeeper {
 
     // keep track of time displayed

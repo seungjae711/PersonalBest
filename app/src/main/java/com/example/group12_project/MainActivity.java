@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity
     private BackgroundStepAsyncTask runner;
     private TextView daily_steps, goal, goalString;
     private Button addSteps, changeTime;
-    private int numGoal, numSteps;
+    private long numGoal, numSteps;
     private static final String TAG = "MainActivity";
 
     @Override
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity
 
 
         /*GOAL SETTING*/
-        /*SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+        SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
         SharedPreferences.Editor editor = storedGoal.edit();
 
         //set first goal during first login
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity
             {
                 launchActivity();
             }
-        });*/
+        });
 
 
         // Yixiang's implementation on basic daily steps counting
@@ -117,14 +117,14 @@ public class MainActivity extends AppCompatActivity
 
 
         /*TESTER BUTTONS*/
-        /*addSteps = findViewById(R.id.add_steps);
+        addSteps = findViewById(R.id.add_steps);
         changeTime = findViewById(R.id.change_time);
 
         addSteps.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
-                //long steps = getDailyStepCount() + 100;
-                //setStepCount(steps);
+                long steps = getDailyStepCount(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) + 1000;
+                setStepCount(steps);
             }
         });
 
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 //TODO change time
             }
-        });*/
+        });
 
 
     }
@@ -175,16 +175,16 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
 
 
-            /*SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
-            numSteps = Integer.parseInt(getStepCount());
-            numGoal = Integer.parseInt(storedGoal.getString("goal",""));
+            SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+            numSteps = getDailyStepCount(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
+            numGoal = Long.parseLong(storedGoal.getString("goal",""));
 
             //if goal is reached
             if(numSteps >= numGoal) {
                 Intent newGoalDialog = new Intent(getApplicationContext(), GoalDialog.class);
                 startActivityForResult(newGoalDialog, 1);
                 updateGoal(goal);
-            }*/
+            }
         }
     }
 

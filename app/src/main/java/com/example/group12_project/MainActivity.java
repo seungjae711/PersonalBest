@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -15,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity
     private FitnessService fitnessService;
     private BackgroundStepAsyncTask runner;
     private TextView daily_steps, goal, goalString;
+    private Button addSteps, changeTime;
     private int numGoal, numSteps;
     private static final String TAG = "MainActivity";
 
@@ -41,14 +45,14 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });*/
+        });
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -60,25 +64,8 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        // Yixiang's implementation on basic daily steps counting
-        daily_steps = findViewById(R.id.daily_steps);
-        FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
-            @Override
-            public FitnessService create(MainActivity mainActivity) {
-                return new GoogleFitAdapter(mainActivity);
-            }
-        });
-
-        /*CREATE FITNESS SERVICE*/
-        fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
-        fitnessService.setup();
-
-        // starting async tasks
-        runner = new BackgroundStepAsyncTask();
-        runner.execute(0);
-
         /*GOAL SETTING*/
-        SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+        /*SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
         SharedPreferences.Editor editor = storedGoal.edit();
 
         //set first goal during first login
@@ -103,6 +90,44 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 launchActivity();
+            }
+        });*/
+
+
+        // Yixiang's implementation on basic daily steps counting
+        daily_steps = findViewById(R.id.daily_steps);
+        FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
+            @Override
+            public FitnessService create(MainActivity mainActivity) {
+                return new GoogleFitAdapter(mainActivity);
+            }
+        });
+
+        /*CREATE FITNESS SERVICE*/
+        fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
+        fitnessService.setup();
+
+        // starting async tasks
+        runner = new BackgroundStepAsyncTask();
+        runner.execute(0);
+
+
+        /*TESTER BUTTONS*/
+        addSteps = findViewById(R.id.add_steps);
+        changeTime = findViewById(R.id.change_time);
+
+        addSteps.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v)
+            {
+                long steps = Integer.parseInt(getStepCount()) + 100;
+                setStepCount(steps);
+            }
+        });
+
+        changeTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO change time
             }
         });
 
@@ -137,18 +162,6 @@ public class MainActivity extends AppCompatActivity
                 i++;
                 publishProgress(i);
 
-                /*
-                //TODO access current step count and check if goal reached
-                SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
-                numSteps = Integer.parseInt(getStepCount());
-                numGoal = Integer.parseInt(storedGoal.getString("goal",""));
-
-                //if goal is reached
-                if(numSteps >= numGoal) {
-                    Intent newGoalDialog = new Intent(getApplicationContext(), GoalDialog.class);
-                    startActivityForResult(newGoalDialog, 1);
-                    updateGoal(goal);
-                }*/
             }
         }
 
@@ -156,6 +169,18 @@ public class MainActivity extends AppCompatActivity
         protected void onProgressUpdate(Integer... progress) {
             String message = "Updated" + progress[0].toString();
             Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+
+
+            /*SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+            numSteps = Integer.parseInt(getStepCount());
+            numGoal = Integer.parseInt(storedGoal.getString("goal",""));
+
+            //if goal is reached
+            if(numSteps >= numGoal) {
+                Intent newGoalDialog = new Intent(getApplicationContext(), GoalDialog.class);
+                startActivityForResult(newGoalDialog, 1);
+                updateGoal(goal);
+            }*/
         }
     }
 

@@ -27,5 +27,4 @@ public class FitnessServiceFactory {
     public interface BluePrint {
         FitnessService create(MainActivity mainActivity);
     }
-
 }

@@ -20,7 +20,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import java.util.Calendar;
 import com.example.group12_project.fitness.FitnessService;
 import com.example.group12_project.fitness.FitnessServiceFactory;
 import com.example.group12_project.fitness.GoogleFitAdapter;
@@ -45,12 +45,16 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Button read = findViewById(R.id.dataRead);
+
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+
+        read.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //Button that will let us test data history
+                fitnessService.dataSetup();
+                fitnessService.dataReader();
             }
         });
 
@@ -113,14 +117,14 @@ public class MainActivity extends AppCompatActivity
 
 
         /*TESTER BUTTONS*/
-        addSteps = findViewById(R.id.add_steps);
+        /*addSteps = findViewById(R.id.add_steps);
         changeTime = findViewById(R.id.change_time);
 
         addSteps.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
-                long steps = Integer.parseInt(getStepCount()) + 100;
-                setStepCount(steps);
+                //long steps = getDailyStepCount() + 100;
+                //setStepCount(steps);
             }
         });
 
@@ -129,7 +133,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 //TODO change time
             }
-        });
+        });*/
 
 
     }
@@ -188,13 +192,53 @@ public class MainActivity extends AppCompatActivity
     public void setStepCount(long stepCount) {
         daily_steps.setText(String.valueOf(stepCount));
     }
-    
-    //get daily step count
-    public String getStepCount() {
-        return daily_steps.getText().toString();
+
+    //store step count of the day to local (sharedPreference)
+    public void storeDailyStepCount(int date, long stepCount){
+        SharedPreferences sharedPreferences = getSharedPreferences("daily_stepCount", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putLong(String.valueOf(date),stepCount);
+        editor.apply();
+        Toast.makeText(MainActivity.this, "today's step count is saved!", Toast.LENGTH_SHORT).show();
     }
 
-    //DELETE not sure what's the usage
+    //weekly cumulative step count
+    //Reset every seven days
+    public void storeTotalStepCount(int day_of_week, long stepCount){
+
+        SharedPreferences sharedPreferences = getSharedPreferences("weekly_stepCount", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        // Starting to record the total (on a day other than Sunday)
+        if(sharedPreferences.getLong("total_stepCount", -1) == -1){
+            editor.putLong("total_stepCount",0);
+            Toast.makeText(MainActivity.this, "Starting to record weekly step count!", Toast.LENGTH_SHORT).show();
+        }
+        // Reset total every Sunday.
+        else if(day_of_week == Calendar.SUNDAY){
+            editor.putLong("total_stepCount", stepCount);
+            Toast.makeText(MainActivity.this, "Reset the total on Sunday", Toast.LENGTH_SHORT).show();
+        }
+        // Add up the steps
+        else{
+            long currentTotal = sharedPreferences.getLong("total_stepCount", 0);
+            currentTotal += stepCount;
+            editor.putLong("total_stepCount", currentTotal);
+            Toast.makeText(MainActivity.this, "today's step count is added to total!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public long getDailyStepCount(int date){
+        SharedPreferences sharedPreferences = getSharedPreferences("daily_stepCount", MODE_PRIVATE);
+        return sharedPreferences.getLong(String.valueOf(date),0);
+    }
+
+    public long getTotalStepCount(){
+        SharedPreferences sharedPreferences = getSharedPreferences("weekly_stepCount", MODE_PRIVATE);
+        return sharedPreferences.getLong("total_stepCount", 0);
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //if user updates goal

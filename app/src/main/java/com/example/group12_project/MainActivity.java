@@ -106,9 +106,21 @@ public class MainActivity extends AppCompatActivity
                 button_start.setVisibility(View.VISIBLE);
                 button_end.setVisibility(View.INVISIBLE);
                 timerClock.setText("Time Your Steps!");
-                Toast.makeText(MainActivity.this, Long.toString(ellapsedTimer), Toast.LENGTH_LONG).show();
-            }
+                //Toast.makeText(MainActivity.this, Long.toString(ellapsedTimer), Toast.LENGTH_LONG).show();
+                if(ellapsedTimer > 200000000) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
 
+                    alert.setCancelable(true);
+                    alert.setMessage("Good Job on Finishing up a Timed Session!");
+                    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    alert.show();
+                }
+            }
         });
 
 

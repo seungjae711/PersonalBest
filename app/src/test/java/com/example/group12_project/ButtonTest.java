@@ -1,4 +1,4 @@
-package com.example.mayamiller.startandendbutton;
+package com.example.group12_project;
 
 import android.app.Activity;
 import android.support.test.annotation.UiThreadTest;

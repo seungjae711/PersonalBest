@@ -161,7 +161,8 @@ public class MainActivity extends AppCompatActivity
         addSteps.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
-                long steps = getDailyStepCount(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) + 1000;
+                TextView stepsTv = findViewById(R.id.daily_steps);
+                long steps =  Long.parseLong(stepsTv.getText().toString())+ 1000;
                 setStepCount(steps);
             }
         });
@@ -184,6 +185,32 @@ public class MainActivity extends AppCompatActivity
     private void updateGoal(TextView goal) {
         SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
         goal.setText(storedGoal.getString("goal",""));
+    }
+
+    private void checkIfGoalReached() {
+        /*Button implementation*/
+        SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+        TextView stepsTv = findViewById(R.id.daily_steps);
+        numSteps =  Long.parseLong(stepsTv.getText().toString());
+        numGoal = Long.parseLong(storedGoal.getString("goal",""));
+
+        //if goal is reached
+        if(numSteps >= numGoal) {
+            Intent newGoalDialog = new Intent(getApplicationContext(), GoalDialog.class);
+            startActivityForResult(newGoalDialog, 1);
+            updateGoal(goal);
+        }
+
+        /*SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+            numSteps = getDailyStepCount(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
+            numGoal = Long.parseLong(storedGoal.getString("goal",""));
+
+            //if goal is reached
+            if(numSteps >= numGoal) {
+                Intent newGoalDialog = new Intent(getApplicationContext(), GoalDialog.class);
+                startActivityForResult(newGoalDialog, 1);
+                updateGoal(goal);
+            }*/
     }
 
     // async task for update steps on background every 5 seconds
@@ -212,17 +239,7 @@ public class MainActivity extends AppCompatActivity
             String message = "Updated" + progress[0].toString();
             Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
 
-
-            SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
-            numSteps = getDailyStepCount(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
-            numGoal = Long.parseLong(storedGoal.getString("goal",""));
-
-            //if goal is reached
-            if(numSteps >= numGoal) {
-                Intent newGoalDialog = new Intent(getApplicationContext(), GoalDialog.class);
-                startActivityForResult(newGoalDialog, 1);
-                updateGoal(goal);
-            }
+            checkIfGoalReached();
         }
     }
 

@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity
     private long numGoal, numSteps;
     private static final String TAG = "MainActivity";
     boolean isPaused = false;
+    boolean goalReached = false;
 
     Calendar cal;
     EditText timeEntered;
@@ -221,6 +222,27 @@ public class MainActivity extends AppCompatActivity
         goal.setText(storedGoal.getString("goal",""));
     }
 
+    private void checkIfHalfGoal(){
+        SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+        TextView stepsTv = findViewById(R.id.daily_steps);
+        numSteps =  Long.parseLong(stepsTv.getText().toString());
+        numGoal = Long.parseLong(storedGoal.getString("goal",""));
+
+        if(numSteps >= (numGoal/2)){
+            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+
+            alert.setCancelable(true);
+            alert.setMessage("You've nearly doubled your steps. Keep up the good work!");
+            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            alert.show();
+        }
+    }
+    
     private void checkIfGoalReached() {
         /*Button implementation*/
         SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
@@ -231,9 +253,22 @@ public class MainActivity extends AppCompatActivity
         //if goal is reached
         if(numSteps >= numGoal) {
             isPaused = true;
+            // Added Encourage Messege PopUp
+            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+            alert.setCancelable(true);
+            alert.setMessage("Congrats You Completed Your Goal!");
+            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            alert.show();
+            //Go to next acitivity to set up new goal
             Intent newGoalDialog = new Intent(getApplicationContext(), GoalDialog.class);
             startActivityForResult(newGoalDialog, 1);
             updateGoal(goal);
+            goalReached = true;
         }
 
         /*SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
@@ -277,6 +312,9 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
 
             checkIfGoalReached();
+            if(!goalReached){
+                checkIfHalfGoal();
+            }
         }
     }
 

@@ -331,9 +331,9 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public void calculateAverageSpeed(){
-        SharedPreferences sharedPreferences = getSharedPreferences("USE_YOUR_HEIGHT", MODE_PRIVATE);
-        double height = (double)sharedPreferences.getInt("",0); //TODO:change key value
+    public double calculateAverageSpeed(){
+        SharedPreferences sharedPreferences = getSharedPreferences("height", MODE_PRIVATE);
+        double height = (double)sharedPreferences.getInt("height",0); //TODO:change key value
         if(height != 0){
             //Multiply height in inches by 0.413. This is a predetermined number that figures out average stride length.
             //Source: https://www.openfit.com/how-many-steps-walk-per-mile
@@ -344,7 +344,13 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(MainActivity.this, "User height data not found!",Toast.LENGTH_LONG).show();
         }
         long stepWalked = getDailyStepCount(cal.get(Calendar.DAY_OF_WEEK));
+        //Get the intentional walking time
+        long timeElapsed = time.getEllapsedTime();
+        //calculate total distance from steps*stride length
+        double distance = stepWalked * height;
+        double averageSpeed = distance/timeElapsed;
 
+        return averageSpeed;
     }
 
 

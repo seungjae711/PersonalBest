@@ -54,9 +54,9 @@ public class CustomGoal extends AppCompatActivity {
                         //if custom goal is accepted, return
                         SharedPreferences newGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
                         SharedPreferences.Editor goalEditor = newGoal.edit();
-                        custGoal = custom.getText().toString();
+                        //custGoal = custom.getText().toString();
                         goalEditor.putString("goal", custGoal);
-                        goalEditor.apply();;
+                        goalEditor.apply();
 
                         Intent returnIntent = new Intent();
                         setResult(1, returnIntent);
@@ -66,10 +66,10 @@ public class CustomGoal extends AppCompatActivity {
             }
         });
 
+        //don't set a new goal
         cancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
-                //don't set a new goal
                 finish();
             }
         });

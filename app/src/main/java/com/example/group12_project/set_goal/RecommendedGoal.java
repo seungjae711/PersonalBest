@@ -46,7 +46,7 @@ public class RecommendedGoal extends AppCompatActivity {
                 SharedPreferences newGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
                 SharedPreferences.Editor goalEditor = newGoal.edit();
                 goalEditor.putString("goal", recGoal);
-                goalEditor.apply();;
+                goalEditor.apply();
 
                 Intent returnIntent = new Intent();
                 setResult(1, returnIntent);
@@ -54,20 +54,19 @@ public class RecommendedGoal extends AppCompatActivity {
             }
         });
 
+        //enter in custom goal instead
+        //lead to custom goal page
         customGoal.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
-                //enter in custom goal instead
-                //lead to custom goal page
                 launchActivity();
-                finish();
             }
         });
 
+        //don't set a new goal
         cancel.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
-                //don't set a new goal
                 finish();
             }
         });

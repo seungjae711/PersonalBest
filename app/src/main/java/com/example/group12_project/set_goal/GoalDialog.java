@@ -1,6 +1,7 @@
 package com.example.group12_project.set_goal;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -11,7 +12,6 @@ import com.example.group12_project.R;
 
 public class GoalDialog extends AppCompatActivity {
     public Button yes, notNow;
-    String returnGoal = "";
 
     public GoalDialog() { }
 
@@ -43,21 +43,15 @@ public class GoalDialog extends AppCompatActivity {
 
     public void launchActivity() {
         Intent intent = new Intent(this, RecommendedGoal.class);
-        //TODO insert current goal not 5000
-        intent.putExtra("CurrGoal", "5000");
         startActivityForResult(intent, 1);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
-            if (data.hasExtra("NewGoal")) {
-                returnGoal = data.getStringExtra("NewGoal");
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra("NewGoal", returnGoal);
-                setResult(1, returnIntent);
-                finish();
-            }
+            Intent returnIntent = new Intent();
+            setResult(1, returnIntent);
+            finish();
         }
     }
 

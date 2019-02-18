@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.group12_project.R;
+
 public class CustomGoal extends AppCompatActivity {
     public Button accept, cancel;
     public EditText custom;

@@ -59,9 +59,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/daily_steps"
-        android:layout_marginTop="15dp"
-        app:layout_constraintBottom_toBottomOf="@+id/add_steps"
+        app:layout_constraintTop_toBottomOf="@+id/daily_steps"
+        android:layout_marginTop="20dp"
         android:textSize="30dp"
         android:text="Time Your Steps!" />
 
@@ -72,9 +71,8 @@
         android:text="Start Timer"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/time"
-        android:layout_marginTop="150dp"
-        app:layout_constraintBottom_toBottomOf="@+id/time"
+        app:layout_constraintTop_toBottomOf="@+id/time"
+        android:layout_marginTop="10dp"
         android:textColor="@color/colorPrimary"
         />
 
@@ -86,9 +84,8 @@
         android:textColor="@color/colorAccent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/time"
-        android:layout_marginTop="150dp"
-        app:layout_constraintBottom_toBottomOf="@+id/time"
+        app:layout_constraintTop_toBottomOf="@+id/time"
+        android:layout_marginTop="10dp"
         />
 
     <Button

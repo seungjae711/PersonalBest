@@ -52,7 +52,13 @@ public class MainActivity extends AppCompatActivity
 
         Button read = findViewById(R.id.dataRead);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchBarChart();
+            }
+        });
 
         read.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +119,7 @@ public class MainActivity extends AppCompatActivity
 
         //set first goal during first login
         if(storedGoal.getBoolean("firstStart",true)){
-            editor.putString("goal", "5000");
+            editor.putString("goal", "5");
             editor.putBoolean("firstStart", false);
             editor.apply();
         }
@@ -181,6 +187,11 @@ public class MainActivity extends AppCompatActivity
     private void launchActivity() {
         Intent intent = new Intent(this, CustomGoal.class);
         startActivityForResult(intent, 1);
+    }
+
+    private void launchBarChart() {
+        Intent intent = new Intent(this, StepChart.class);
+        startActivity(intent);
     }
 
     private void updateGoal(TextView goal) {

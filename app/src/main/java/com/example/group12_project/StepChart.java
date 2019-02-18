@@ -3,6 +3,8 @@ package com.example.group12_project;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.Button;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -17,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 
@@ -32,10 +35,19 @@ public class StepChart extends AppCompatActivity {
     int[] a ={5530,5000,4500,4545,6000,3450,5470,6473,4954};
     int goals = 5000;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.steps_chart);
+
+        Button back = findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         barChart = (BarChart) findViewById(R.id.bargraph);
 
@@ -97,9 +109,9 @@ public class StepChart extends AppCompatActivity {
         BarDataSet barDataSet = new BarDataSet(Entries,"Steps");
 
         //barDataSet.setColor(android.graphics.Color.parseColor("#7FFF00"));
-        BarData barData = new BarData(dates,barDataSet);
+        BarData barData = new BarData(barDataSet);
         barChart.setData(barData);
-        barChart.setDescription("This shows the number of your steps from " + First+ " to " + Last );
+        barChart.setDescription("This shows the number of your steps from " + First + " to " + Last );
         barChart.setDescriptionTextSize(9f);
     }
 

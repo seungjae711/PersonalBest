@@ -1,5 +1,6 @@
 package com.example.group12_project;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -32,8 +33,8 @@ public class StepChart extends AppCompatActivity {
     ArrayList<BarEntry> Entries;
     Integer goal;
     String First= "2016/05/05", Last= "2016/05/13";
-    int[] a ={5530,5000,4500,4545,6000,3450,5470,6473,4954};
-    int goals = 5000;
+    int[] a ={1530,2000,4500,4545,3000,3450,1470,2473,4954};
+    int goals;
 
 
     @Override
@@ -51,6 +52,8 @@ public class StepChart extends AppCompatActivity {
 
         barChart = (BarChart) findViewById(R.id.bargraph);
 
+        SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+        goals = Integer.parseInt(storedGoal.getString("goal",""));
         createRandomBarGraph(First,Last,goals,a);
     }
 
@@ -78,15 +81,15 @@ public class StepChart extends AppCompatActivity {
 
             // needs steps for each day
 
-            //float max = 0f;
-            //float min = 0f;
-            //float value = 0f;
-            //random = new Random();
+            float max = 0f;
+            float min = 0f;
+            float value = 0f;
+            random = new Random();
             for(int j = 0; j< steps.length; j++){
-                //max = 3000f;
-                //min = 3000f;
-                //value = random.nextFloat()*max + min;
-                BarEntry Bar = new BarEntry(steps[j], j);
+                max = 3000f;
+                min = 3000f;
+                value = random.nextFloat()*max + min;
+                BarEntry Bar = new BarEntry(steps[j], value);
 
                 Entries.add(Bar);
             }
@@ -108,9 +111,10 @@ public class StepChart extends AppCompatActivity {
 
         BarDataSet barDataSet = new BarDataSet(Entries,"Steps");
 
-        //barDataSet.setColor(android.graphics.Color.parseColor("#7FFF00"));
+        barDataSet.setColor(android.graphics.Color.parseColor("#7FFF00"));
         BarData barData = new BarData(barDataSet);
         barChart.setData(barData);
+        barChart.setScaleEnabled(true);
         barChart.setDescription("This shows the number of your steps from " + First + " to " + Last );
         barChart.setDescriptionTextSize(9f);
     }

@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -57,22 +58,11 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Button read = findViewById(R.id.dataRead);
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 launchBarChart();
-            }
-        });
-
-        read.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Button that will let us test data history
-                fitnessService.dataSetup();
-                fitnessService.dataReader();
             }
         });
 
@@ -199,8 +189,10 @@ public class MainActivity extends AppCompatActivity
         changeTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String time = timeEntered.getText().toString();
-                cal.setTimeInMillis(Long.parseLong(time));
+                if (!TextUtils.isEmpty(timeEntered.getText().toString())) {
+                    String time = timeEntered.getText().toString();
+                    cal.setTimeInMillis(Long.parseLong(time));
+                }
             }
         });
 
@@ -228,7 +220,7 @@ public class MainActivity extends AppCompatActivity
         numSteps =  Long.parseLong(stepsTv.getText().toString());
         numGoal = Long.parseLong(storedGoal.getString("goal",""));
 
-        if(numSteps >= (numGoal/2)){
+        if((numSteps >= (numGoal/2)) && (numSteps < numGoal)){
             AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
 
             alert.setCancelable(true);
@@ -253,17 +245,6 @@ public class MainActivity extends AppCompatActivity
         //if goal is reached
         if(numSteps >= numGoal) {
             isPaused = true;
-            // Added Encourage Messege PopUp
-            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-            alert.setCancelable(true);
-            alert.setMessage("Congrats You Completed Your Goal!");
-            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            alert.show();
             //Go to next acitivity to set up new goal
             Intent newGoalDialog = new Intent(getApplicationContext(), GoalDialog.class);
             startActivityForResult(newGoalDialog, 1);
@@ -308,8 +289,8 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected void onProgressUpdate(Integer... progress) {
-            String message = "Updated" + progress[0].toString();
-            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+            //String message = "Updated" + progress[0].toString();
+            //Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
 
             checkIfGoalReached();
             if(!goalReached){

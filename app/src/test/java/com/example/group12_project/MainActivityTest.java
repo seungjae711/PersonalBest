@@ -1,5 +1,4 @@
-package com.example.mayamiller.startandendbutton;
-
+package com.example.group12_project;
 
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.filters.LargeTest;

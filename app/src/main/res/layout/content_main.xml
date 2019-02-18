@@ -72,5 +72,28 @@
         app:layout_constraintLeft_toRightOf="@+id/daily_steps"
         android:text="Change Time"
         />
+    
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30dp"
+        android:text="Time Your Steps!" />
+
+    <Button
+        android:id="@+id/startTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Timer"
+        android:textColor="@color/colorPrimary"
+        />
+
+    <Button
+        android:id="@+id/endTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="End Timer"
+        android:textColor="@color/colorAccent"
+        />
 
 </android.support.constraint.ConstraintLayout>

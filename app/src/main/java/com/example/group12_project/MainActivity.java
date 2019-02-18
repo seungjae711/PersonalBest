@@ -124,10 +124,13 @@ public class MainActivity extends AppCompatActivity
         });
 
 
+        SharedPreferences sharedPreferences = getSharedPreferences("height", MODE_PRIVATE);
+        SharedPreferences.Editor spEditor = sharedPreferences.edit();
 
         /*GOAL SETTING*/
         SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
         SharedPreferences.Editor editor = storedGoal.edit();
+        spEditor.putInt("height",66);
 
         //set first goal during first login
         if(storedGoal.getBoolean("firstStart",true)){

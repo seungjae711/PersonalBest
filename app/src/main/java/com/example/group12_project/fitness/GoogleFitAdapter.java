@@ -121,6 +121,7 @@ public class GoogleFitAdapter implements FitnessService {
                 });
     }
 
+
     public void dataSetup() {
         GoogleSignInAccount lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(activity);
 
@@ -154,8 +155,6 @@ public class GoogleFitAdapter implements FitnessService {
         dataSet.add(dataPoint);
 
 
-        //For some reason the task below always fails
-        //There is a lot of output to the info channel in logs that seem to have some hints every time the READ button is clicked
 
         Task<Void> response = Fitness.getHistoryClient(activity, lastSignedInAccount)
                 .insertData(dataSet);
@@ -163,7 +162,6 @@ public class GoogleFitAdapter implements FitnessService {
         response.addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> write) {
-                //Never seems to be successful
                 if (write.isSuccessful()) {
                     Log.i(TAG, "Insert History Task Worked");
                 }
@@ -248,7 +246,6 @@ public class GoogleFitAdapter implements FitnessService {
 
     // get the update of daily step count
     public void update_daily_steps() {
-        //Log.e(TAG, "Did we get here?");
         //dataReader();
         GoogleSignInAccount lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(activity);
 
@@ -256,7 +253,6 @@ public class GoogleFitAdapter implements FitnessService {
         if (lastSignedInAccount == null) {
             return;
         }
-        //Log.e(TAG, "How about here?");
 
         // request data from google
         Fitness.getHistoryClient(activity, lastSignedInAccount)

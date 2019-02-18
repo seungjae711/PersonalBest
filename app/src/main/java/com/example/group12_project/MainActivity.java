@@ -1,6 +1,8 @@
 package com.example.group12_project;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -56,7 +58,13 @@ public class MainActivity extends AppCompatActivity
 
         Button read = findViewById(R.id.dataRead);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchBarChart();
+            }
+        });
 
         read.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,9 +115,21 @@ public class MainActivity extends AppCompatActivity
                 button_start.setVisibility(View.VISIBLE);
                 button_end.setVisibility(View.INVISIBLE);
                 timerClock.setText("Time Your Steps!");
-                Toast.makeText(MainActivity.this, Long.toString(ellapsedTimer), Toast.LENGTH_LONG).show();
-            }
+                //Toast.makeText(MainActivity.this, Long.toString(ellapsedTimer), Toast.LENGTH_LONG).show();
+                if(ellapsedTimer > 200000000) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
 
+                    alert.setCancelable(true);
+                    alert.setMessage("Good Job on Finishing up a Timed Session!");
+                    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    alert.show();
+                }
+            }
         });
 
 
@@ -120,7 +140,7 @@ public class MainActivity extends AppCompatActivity
 
         //set first goal during first login
         if(storedGoal.getBoolean("firstStart",true)){
-            editor.putString("goal", "5000");
+            editor.putString("goal", "5");
             editor.putBoolean("firstStart", false);
             editor.apply();
         }
@@ -189,6 +209,11 @@ public class MainActivity extends AppCompatActivity
     private void launchActivity() {
         Intent intent = new Intent(this, CustomGoal.class);
         startActivityForResult(intent, 1);
+    }
+
+    private void launchBarChart() {
+        Intent intent = new Intent(this, StepChart.class);
+        startActivity(intent);
     }
 
     private void updateGoal(TextView goal) {

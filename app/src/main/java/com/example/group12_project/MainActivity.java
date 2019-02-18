@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity
     private Button addSteps, changeTime;
     private long numGoal, numSteps;
     private static final String TAG = "MainActivity";
+    boolean isPaused = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,7 +163,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 TextView stepsTv = findViewById(R.id.daily_steps);
-                long steps =  Long.parseLong(stepsTv.getText().toString())+ 1000;
+                long steps =  Long.parseLong(stepsTv.getText().toString())+ 500;
                 setStepCount(steps);
             }
         });
@@ -196,6 +197,7 @@ public class MainActivity extends AppCompatActivity
 
         //if goal is reached
         if(numSteps >= numGoal) {
+            isPaused = true;
             Intent newGoalDialog = new Intent(getApplicationContext(), GoalDialog.class);
             startActivityForResult(newGoalDialog, 1);
             updateGoal(goal);
@@ -229,7 +231,9 @@ public class MainActivity extends AppCompatActivity
                 }
                 fitnessService.update_daily_steps();
                 i++;
-                publishProgress(i);
+                if(!isPaused) {
+                    publishProgress(i);
+                }
 
             }
         }
@@ -299,6 +303,7 @@ public class MainActivity extends AppCompatActivity
         //if user updates goal
         if (resultCode == 1) {
             updateGoal(goal);
+            isPaused = false;
         }
         //If authentication was required during google fit setup, this will be called after the user authenticates
         else if (resultCode == Activity.RESULT_OK) {

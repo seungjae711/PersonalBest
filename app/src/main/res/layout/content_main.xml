@@ -112,5 +112,16 @@
         android:text="Change Time"
         />
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/change_time"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:id="@+id/edit_Time"
+        android:hint="Enter a current time in Milliseconds"
+        android:inputType="number"
+        />
+
 
 </android.support.constraint.ConstraintLayout>

@@ -270,9 +270,10 @@ public class GoogleFitAdapter implements FitnessService {
                         Log.d(TAG, "Total steps: " + total);
                         activity.setStepCount(total);
                         // Stores today's step count using sharedPreferences
-                        activity.storeDailyStepCount(Calendar.DAY_OF_WEEK, total);
+                        Calendar newCal = Calendar.getInstance();
+                        activity.storeDailyStepCount(newCal.get(Calendar.DAY_OF_WEEK),total);
                         // And add today's step count to total
-                        activity.storeTotalStepCount(Calendar.DAY_OF_WEEK,total);
+                        activity.storeTotalStepCount(newCal.get(Calendar.DAY_OF_WEEK),total);
 
 
                     }

@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.Calendar;
@@ -43,6 +44,9 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "MainActivity";
     boolean isPaused = false;
 
+    Calendar cal;
+    EditText timeEntered;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +66,9 @@ public class MainActivity extends AppCompatActivity
                 fitnessService.dataReader();
             }
         });
+
+        cal = Calendar.getInstance();
+        timeEntered = (EditText)findViewById(R.id.edit_Time);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -171,7 +178,8 @@ public class MainActivity extends AppCompatActivity
         changeTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO change time
+                String time = timeEntered.getText().toString();
+                cal.setTimeInMillis(Long.parseLong(time));
             }
         });
 
@@ -295,6 +303,23 @@ public class MainActivity extends AppCompatActivity
     public long getTotalStepCount(){
         SharedPreferences sharedPreferences = getSharedPreferences("weekly_stepCount", MODE_PRIVATE);
         return sharedPreferences.getLong("total_stepCount", 0);
+    }
+
+
+    public void calculateAverageSpeed(){
+        SharedPreferences sharedPreferences = getSharedPreferences("USE_YOUR_HEIGHT", MODE_PRIVATE);
+        double height = (double)sharedPreferences.getInt("",0); //TODO:change key value
+        if(height != 0){
+            //Multiply height in inches by 0.413. This is a predetermined number that figures out average stride length.
+            //Source: https://www.openfit.com/how-many-steps-walk-per-mile
+            height = height * 0.413;
+            height = height/12; //convert to feet (/step)
+        }
+        else{
+            Toast.makeText(MainActivity.this, "User height data not found!",Toast.LENGTH_LONG).show();
+        }
+        long stepWalked = getDailyStepCount(cal.get(Calendar.DAY_OF_WEEK));
+
     }
 
 

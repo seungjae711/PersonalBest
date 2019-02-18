@@ -311,7 +311,7 @@ public class MainActivity extends AppCompatActivity
 
         editor.putLong(String.valueOf(date),stepCount);
         editor.apply();
-        Toast.makeText(MainActivity.this, "today's step count is saved!", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MainActivity.this, "today's step count is saved!", Toast.LENGTH_SHORT).show();
     }
 
     //weekly cumulative step count
@@ -323,19 +323,19 @@ public class MainActivity extends AppCompatActivity
         // Starting to record the total (on a day other than Sunday)
         if(sharedPreferences.getLong("total_stepCount", -1) == -1){
             editor.putLong("total_stepCount",0);
-            Toast.makeText(MainActivity.this, "Starting to record weekly step count!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(MainActivity.this, "Starting to record weekly step count!", Toast.LENGTH_SHORT).show();
         }
         // Reset total every Sunday.
         else if(day_of_week == Calendar.SUNDAY){
             editor.putLong("total_stepCount", stepCount);
-            Toast.makeText(MainActivity.this, "Reset the total on Sunday", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(MainActivity.this, "Reset the total on Sunday", Toast.LENGTH_SHORT).show();
         }
         // Add up the steps
         else{
             long currentTotal = sharedPreferences.getLong("total_stepCount", 0);
             currentTotal += stepCount;
             editor.putLong("total_stepCount", currentTotal);
-            Toast.makeText(MainActivity.this, "today's step count is added to total!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(MainActivity.this, "today's step count is added to total!", Toast.LENGTH_SHORT).show();
         }
     }
 

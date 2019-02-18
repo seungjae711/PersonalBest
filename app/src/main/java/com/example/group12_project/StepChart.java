@@ -33,7 +33,7 @@ public class StepChart extends AppCompatActivity {
     ArrayList<BarEntry> Entries;
     Integer goal;
     String First= "2016/05/05", Last= "2016/05/13";
-    int[] a ={1530,2000,4500,4545,3000,3450,1470,2473,4954};
+    int[] a ={2000,1500,4545,3000,3450,4470,2473};
     int goals;
 
 
@@ -81,17 +81,18 @@ public class StepChart extends AppCompatActivity {
 
             // needs steps for each day
 
-            float max = 0f;
-            float min = 0f;
-            float value = 0f;
-            random = new Random();
+            //float max = 0f;
+            //float min = 0f;
+            //float value = 0f;
+            //random = new Random();
+            int day = 1;
             for(int j = 0; j< steps.length; j++){
-                max = 3000f;
-                min = 3000f;
-                value = random.nextFloat()*max + min;
-                BarEntry Bar = new BarEntry(steps[j], value);
-
+                //max = 3000f;
+                //min = 3000f;
+                //value = random.nextFloat()*max + min;
+                BarEntry Bar = new BarEntry(day, steps[j]);
                 Entries.add(Bar);
+                day++;
             }
 
         }catch(ParseException e){
@@ -104,14 +105,14 @@ public class StepChart extends AppCompatActivity {
         upper_limit.enableDashedLine(10f, 10f, 0f);
         upper_limit.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
         upper_limit.setTextSize(13f);
-        upper_limit.setTextColor(android.graphics.Color.parseColor("#FF0000"));
+        upper_limit.setTextColor(android.graphics.Color.parseColor("#D81B60"));
         YAxis leftAxis = barChart.getAxisLeft();
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
         leftAxis.addLimitLine(upper_limit);
 
         BarDataSet barDataSet = new BarDataSet(Entries,"Steps");
 
-        barDataSet.setColor(android.graphics.Color.parseColor("#7FFF00"));
+        barDataSet.setColor(android.graphics.Color.parseColor("#008577"));
         BarData barData = new BarData(barDataSet);
         barChart.setData(barData);
         barChart.setScaleEnabled(true);

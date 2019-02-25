@@ -40,7 +40,7 @@ public class CustomGoal extends AppCompatActivity {
                 } else {
                     //2,000 min - 50,000 max
                     //encourage more steps if below min
-                    if(Double.parseDouble(custGoal) < minSteps) {
+                    if (Double.parseDouble(custGoal) < minSteps) {
                         Toast.makeText(getApplicationContext(), "You can do at least 2,000 steps! " +
                                 "Try another goal.", Toast.LENGTH_LONG).show();
                     }
@@ -68,8 +68,7 @@ public class CustomGoal extends AppCompatActivity {
 
         //don't set a new goal
         cancel.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 finish();
             }
         });

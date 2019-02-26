@@ -13,6 +13,8 @@ import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.result.DataReadResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.text.DateFormat;
@@ -26,11 +28,13 @@ public class DataReader {
     private DataReadRequest readRequest;
     private final String TAG = "DataReader";
     private List<DataSet> dataSets;
+    private long total;
 
 
 
     public DataReader(MainActivity activity, long startTime, long endTime) {
         this.activity = activity;
+        this.total = 0;
         setData(startTime, endTime);
     }
 
@@ -68,17 +72,19 @@ public class DataReader {
     }
 
     public void dumpDataSets() {
-        for (DataSet ds : this.dataSets) {
-            Log.i(TAG, "Data returned for Data type: " + ds.getDataType().getName());
-            DateFormat dateFormat = getTimeInstance();
+        if (this .dataSets != null && this.dataSets.size() > 0) {
+            for (DataSet ds : this.dataSets) {
+                Log.i(TAG, "Data returned for Data type: " + ds.getDataType().getName());
+                DateFormat dateFormat = getTimeInstance();
 
-            for (DataPoint dp : ds.getDataPoints()) {
-                Log.i(TAG, "Data point:");
-                Log.i(TAG, "\tType: " + dp.getDataType().getName());
-                Log.i(TAG, "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
-                Log.i(TAG, "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)));
-                for (Field field : dp.getDataType().getFields()) {
-                    Log.i(TAG, "\tField: " + field.getName() + " Value: " + dp.getValue(field));
+                for (DataPoint dp : ds.getDataPoints()) {
+                    Log.i(TAG, "Data point:");
+                    Log.i(TAG, "\tType: " + dp.getDataType().getName());
+                    Log.i(TAG, "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
+                    Log.i(TAG, "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)));
+                    for (Field field : dp.getDataType().getFields()) {
+                        Log.i(TAG, "\tField: " + field.getName() + " Value: " + dp.getValue(field));
+                    }
                 }
             }
         }
@@ -88,5 +94,37 @@ public class DataReader {
     public List<DataSet> getData() {
         return this.dataSets;
     }
+
+    public long getDailyData() {
+        GoogleSignInAccount lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(activity);
+
+        // check if already signed in
+        if (lastSignedInAccount == null) {
+            return 0;
+        }
+
+        // request data from google
+        Fitness.getHistoryClient(activity, lastSignedInAccount)
+                .readDailyTotal(DataType.TYPE_STEP_COUNT_DELTA)
+                .addOnSuccessListener(new OnSuccessListener<DataSet>() {
+                    @Override
+                    public void onSuccess(DataSet dataSet) {
+                        Log.d(TAG, dataSet.toString());
+                        total = dataSet.isEmpty() ? 0 :
+                                dataSet.getDataPoints().get(0).getValue(Field.FIELD_STEPS).asInt();
+                        Log.d(TAG, "Total steps: " + total);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                total = 0;
+                Log.d(TAG, "There was a problem getting the step count.", e);
+            }
+        });
+        return total;
+    }
+
+
 
 }

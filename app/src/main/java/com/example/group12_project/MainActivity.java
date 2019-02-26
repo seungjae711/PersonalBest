@@ -295,6 +295,7 @@ public class MainActivity extends AppCompatActivity
             //String message = "Updated" + progress[0].toString();
             //Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
 
+            Log.i(TAG, "Checking Goal");
             checkIfGoalReached();
             if(!goalReached){
                 checkIfHalfGoal();
@@ -303,8 +304,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     // set daily step count to text view
-    public void setStepCount(long stepCount) {
-        daily_steps.setText(String.valueOf(stepCount));
+    public void setStepCount(final long stepCount) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                daily_steps.setText(String.valueOf(stepCount));
+
+            }
+        });
+
     }
 
     //store step count of the day to local (sharedPreference)

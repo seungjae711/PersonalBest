@@ -210,7 +210,7 @@ public class GoogleFitAdapter implements FitnessService {
 
     // get the update of daily step count
     public void update_daily_steps() {
-        //dataReader();
+        dataReader();
         GoogleSignInAccount lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(activity);
 
         // check if already signed in
@@ -218,8 +218,18 @@ public class GoogleFitAdapter implements FitnessService {
             return;
         }
 
+        DataReader reader = new DataReader(activity,1,2);
+        long total = reader.getDailyData();
+        Log.d(TAG, "Total steps: " + total);
+        activity.setStepCount(total);
+        // Stores today's step count using sharedPreferences
+        Calendar newCal = Calendar.getInstance();
+        activity.storeDailyStepCount(newCal.get(Calendar.DAY_OF_WEEK),total);
+        // And add today's step count to total
+        activity.storeTotalStepCount(newCal.get(Calendar.DAY_OF_WEEK),total);
+
         // request data from google
-        Fitness.getHistoryClient(activity, lastSignedInAccount)
+      /*  Fitness.getHistoryClient(activity, lastSignedInAccount)
                 .readDailyTotal(DataType.TYPE_STEP_COUNT_DELTA)
                 .addOnSuccessListener(new OnSuccessListener<DataSet>() {
                     @Override
@@ -243,6 +253,6 @@ public class GoogleFitAdapter implements FitnessService {
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG, "There was a problem getting the step count.", e);
                     }
-                });
+                }); */
     }
 }

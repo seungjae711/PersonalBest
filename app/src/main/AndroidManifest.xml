@@ -35,6 +35,12 @@
         <activity android:name=".StepChart"
             android:label="Step Chart"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".HeightManager"
+            android:label="Height Manager"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".StatsDialog"
+            android:label="Stats Dialog"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

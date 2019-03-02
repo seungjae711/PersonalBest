@@ -30,6 +30,7 @@ import com.example.group12_project.fitness.FitnessServiceFactory;
 import com.example.group12_project.fitness.GoogleFitAdapter;
 import com.example.group12_project.set_goal.CustomGoal;
 import com.example.group12_project.set_goal.GoalDialog;
+import com.example.group12_project.set_goal.GoalManagement;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -43,10 +44,12 @@ public class MainActivity extends AppCompatActivity
     private BackgroundStepAsyncTask runner;
     private TextView daily_steps, goal, goalString;
     private Button addSteps, changeTime;
-    private long numGoal, numSteps;
+    //private long numGoal, numSteps;
     private static final String TAG = "MainActivity";
     boolean isPaused = false;
     boolean goalReached = false;
+
+    private GoalManagement goalManagement;
 
     Calendar cal;
     EditText timeEntered;
@@ -106,6 +109,7 @@ public class MainActivity extends AppCompatActivity
                 button_start.setVisibility(View.VISIBLE);
                 button_end.setVisibility(View.INVISIBLE);
                 timerClock.setText("Time Your Steps!");
+                statsLaunch();
                 //Toast.makeText(MainActivity.this, Long.toString(ellapsedTimer), Toast.LENGTH_LONG).show();
                 if(ellapsedTimer > 200000000) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
@@ -124,24 +128,27 @@ public class MainActivity extends AppCompatActivity
         });
 
 
-        SharedPreferences sharedPreferences = getSharedPreferences("height", MODE_PRIVATE);
-        SharedPreferences.Editor spEditor = sharedPreferences.edit();
+    //    SharedPreferences sharedPreferences = getSharedPreferences("height", MODE_PRIVATE);
+     //   SharedPreferences.Editor spEditor = sharedPreferences.edit();
 
         /*GOAL SETTING*/
         SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
         SharedPreferences.Editor editor = storedGoal.edit();
-        spEditor.putInt("height",66);
+  //      spEditor.putInt("height",66);
 
         //set first goal during first login
         if(storedGoal.getBoolean("firstStart",true)){
-            editor.putString("goal", "5");
-            editor.putBoolean("firstStart", false);
-            editor.apply();
+            firstLaunch();
         }
+
+        goalManagement = new GoalManagement(this);
+
 
         goalString = findViewById(R.id.goal_string);
         goal = findViewById(R.id.goal);
-        updateGoal(goal);
+
+
+        goalManagement.updateGoal(goal);
 
         //if user clicks goal they can change to new goal
         goalString.setOnClickListener(new View.OnClickListener() {
@@ -212,60 +219,21 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    private void updateGoal(TextView goal) {
-        SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
-        goal.setText(storedGoal.getString("goal",""));
+    private void statsLaunch() {
+        Intent intent = new Intent(this, StatsDialog.class);
+        startActivity(intent);
     }
 
-    private void checkIfHalfGoal(){
+    private void firstLaunch() {
         SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
-        TextView stepsTv = findViewById(R.id.daily_steps);
-        numSteps =  Long.parseLong(stepsTv.getText().toString());
-        numGoal = Long.parseLong(storedGoal.getString("goal",""));
-
-        if((numSteps >= (numGoal/2)) && (numSteps < numGoal)){
-            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-
-            alert.setCancelable(true);
-            alert.setMessage("You've nearly doubled your steps. Keep up the good work!");
-            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            alert.show();
-        }
+        SharedPreferences.Editor edit = storedGoal.edit();
+        edit.putString("goal", "5");
+        edit.putBoolean("firstStart", false);
+        edit.apply();
+        Intent intent = new Intent(this, HeightManager.class);
+        startActivity(intent);
     }
-    
-    private void checkIfGoalReached() {
-        /*Button implementation*/
-        SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
-        TextView stepsTv = findViewById(R.id.daily_steps);
-        numSteps =  Long.parseLong(stepsTv.getText().toString());
-        numGoal = Long.parseLong(storedGoal.getString("goal",""));
 
-        //if goal is reached
-        if(numSteps >= numGoal) {
-            isPaused = true;
-            //Go to next acitivity to set up new goal
-            Intent newGoalDialog = new Intent(getApplicationContext(), GoalDialog.class);
-            startActivityForResult(newGoalDialog, 1);
-            updateGoal(goal);
-            goalReached = true;
-        }
-
-        /*SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
-            numSteps = getDailyStepCount(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
-            numGoal = Long.parseLong(storedGoal.getString("goal",""));
-
-            //if goal is reached
-            if(numSteps >= numGoal) {
-                Intent newGoalDialog = new Intent(getApplicationContext(), GoalDialog.class);
-                startActivityForResult(newGoalDialog, 1);
-                updateGoal(goal);
-            }*/
-    }
 
     // async task for update steps on background every 5 seconds
     private class BackgroundStepAsyncTask extends AsyncTask<Integer, Integer, Void> {
@@ -295,16 +263,23 @@ public class MainActivity extends AppCompatActivity
             //String message = "Updated" + progress[0].toString();
             //Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
 
-            checkIfGoalReached();
-            if(!goalReached){
-                checkIfHalfGoal();
+            Log.i(TAG, "Checking Goal");
+            if(!goalManagement.checkIfGoalReached(isPaused)){
+                goalManagement.checkIfHalfGoal();
             }
         }
     }
 
     // set daily step count to text view
-    public void setStepCount(long stepCount) {
-        daily_steps.setText(String.valueOf(stepCount));
+    public void setStepCount(final long stepCount) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                daily_steps.setText(String.valueOf(stepCount));
+
+            }
+        });
+
     }
 
     //store step count of the day to local (sharedPreference)
@@ -380,7 +355,7 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //if user updates goal
         if (resultCode == 1) {
-            updateGoal(goal);
+            goalManagement.updateGoal(goal);
             isPaused = false;
         }
         //If authentication was required during google fit setup, this will be called after the user authenticates

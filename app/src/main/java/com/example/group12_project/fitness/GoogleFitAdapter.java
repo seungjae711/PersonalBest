@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
+
+import com.example.group12_project.DataReader;
 import com.example.group12_project.MainActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -175,20 +177,7 @@ public class GoogleFitAdapter implements FitnessService {
 
 
     //Skeleton code from google api for outputting results of a HistoryClient task
-    public void dumpDataSet(DataSet dataSet) {
-        Log.i(TAG, "Data returned for Data type: " + dataSet.getDataType().getName());
-        DateFormat dateFormat = getTimeInstance();
 
-        for (DataPoint dp : dataSet.getDataPoints()) {
-            Log.i(TAG, "Data point:");
-            Log.i(TAG, "\tType: " + dp.getDataType().getName());
-            Log.i(TAG, "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
-            Log.i(TAG, "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)));
-            for (Field field : dp.getDataType().getFields()) {
-                Log.i(TAG, "\tField: " + field.getName() + " Value: " + dp.getValue(field));
-            }
-        }
-    }
 
 
 
@@ -208,45 +197,20 @@ public class GoogleFitAdapter implements FitnessService {
         long endTime = cal.getTimeInMillis();
         cal.add(Calendar.WEEK_OF_YEAR, -1);
         long startTime = cal.getTimeInMillis();
+
         java.text.DateFormat dateFormat = getDateInstance();
         Log.i(TAG, "Range Start: " + dateFormat.format(startTime));
         Log.i(TAG, "Range End: " + dateFormat.format(endTime));
 
         //Creating the readrequest for our desired time and data type
-        DataReadRequest readRequest =
-                new DataReadRequest.Builder()
-                        .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
-                        .bucketByTime(1, TimeUnit.DAYS)
-                        .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
-                        .build();
-
-        //Starting a task with the readrequest
-        Task<DataReadResponse> response = Fitness.getHistoryClient(activity, lastSignedInAccount)
-                .readData(readRequest);
-        //Execute these actions once it's complete
-        response.addOnCompleteListener(new OnCompleteListener<DataReadResponse>() {
-            @Override
-            public void onComplete(@NonNull Task<DataReadResponse> readResponse) {
-                if (readResponse.isSuccessful()) {
-                    Log.i(TAG, "History Task Worked");
-                    DataReadResponse resp = readResponse.getResult();
-                    List<DataSet> dataSets = resp.getDataSets();
-                    for (DataSet ds : dataSets) {
-                        dumpDataSet(ds);
-                    }
-
-                }
-                else {
-                    Log.i(TAG, "History Task Failed");
-                    Exception e = readResponse.getException();
-                }
-            }
-        });
+        DataReader reader = new DataReader(activity, startTime, endTime);
+        List<DataSet> data = reader.getData();
+        reader.dumpDataSets();
     }
 
     // get the update of daily step count
     public void update_daily_steps() {
-        //dataReader();
+        dataReader();
         GoogleSignInAccount lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(activity);
 
         // check if already signed in
@@ -254,8 +218,18 @@ public class GoogleFitAdapter implements FitnessService {
             return;
         }
 
+        DataReader reader = new DataReader(activity,1,2);
+        long total = reader.getDailyData();
+        Log.d(TAG, "Total steps: " + total);
+        activity.setStepCount(total);
+        // Stores today's step count using sharedPreferences
+        Calendar newCal = Calendar.getInstance();
+        activity.storeDailyStepCount(newCal.get(Calendar.DAY_OF_WEEK),total);
+        // And add today's step count to total
+        activity.storeTotalStepCount(newCal.get(Calendar.DAY_OF_WEEK),total);
+
         // request data from google
-        Fitness.getHistoryClient(activity, lastSignedInAccount)
+      /*  Fitness.getHistoryClient(activity, lastSignedInAccount)
                 .readDailyTotal(DataType.TYPE_STEP_COUNT_DELTA)
                 .addOnSuccessListener(new OnSuccessListener<DataSet>() {
                     @Override
@@ -279,6 +253,6 @@ public class GoogleFitAdapter implements FitnessService {
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG, "There was a problem getting the step count.", e);
                     }
-                });
+                }); */
     }
 }

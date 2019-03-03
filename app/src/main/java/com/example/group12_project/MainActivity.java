@@ -234,60 +234,6 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-//    private void updateGoal(TextView goal) {
-//        SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
-//        goal.setText(storedGoal.getString("goal",""));
-//    }
-//
-//    private void checkIfHalfGoal(){
-//        SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
-//        TextView stepsTv = findViewById(R.id.daily_steps);
-//        numSteps =  Long.parseLong(stepsTv.getText().toString());
-//        numGoal = Long.parseLong(storedGoal.getString("goal",""));
-//
-//        if((numSteps >= (numGoal/2)) && (numSteps < numGoal)){
-//            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-//
-//            alert.setCancelable(true);
-//            alert.setMessage("You've nearly doubled your steps. Keep up the good work!");
-//            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    dialog.cancel();
-//                }
-//            });
-//            alert.show();
-//        }
-//    }
-
-//    private void checkIfGoalReached() {
-//        /*Button implementation*/
-//        SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
-//        TextView stepsTv = findViewById(R.id.daily_steps);
-//        numSteps =  Long.parseLong(stepsTv.getText().toString());
-//        numGoal = Long.parseLong(storedGoal.getString("goal",""));
-//
-//        //if goal is reached
-//        if(numSteps >= numGoal) {
-//            isPaused = true;
-//            //Go to next acitivity to set up new goal
-//            Intent newGoalDialog = new Intent(getApplicationContext(), GoalDialog.class);
-//            startActivityForResult(newGoalDialog, 1);
-//            updateGoal(goal);
-//            goalReached = true;
-//        }
-//
-//        /*SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
-//            numSteps = getDailyStepCount(Calendar.getInstance().get(Calendar.DAY_OF_WEEK));
-//            numGoal = Long.parseLong(storedGoal.getString("goal",""));
-//
-//            //if goal is reached
-//            if(numSteps >= numGoal) {
-//                Intent newGoalDialog = new Intent(getApplicationContext(), GoalDialog.class);
-//                startActivityForResult(newGoalDialog, 1);
-//                updateGoal(goal);
-//            }*/
-//    }
 
     // async task for update steps on background every 5 seconds
     private class BackgroundStepAsyncTask extends AsyncTask<Integer, Integer, Void> {

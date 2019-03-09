@@ -28,6 +28,7 @@ import java.util.Calendar;
 import com.example.group12_project.fitness.FitnessService;
 import com.example.group12_project.fitness.FitnessServiceFactory;
 import com.example.group12_project.fitness.GoogleFitAdapter;
+import com.example.group12_project.fitness.SensorSetter;
 import com.example.group12_project.set_goal.CustomGoal;
 import com.example.group12_project.set_goal.GoalDialog;
 import com.example.group12_project.set_goal.GoalManagement;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity
     private BackgroundStepAsyncTask runner;
     private TextView daily_steps, goal, goalString;
     private Button addSteps, changeTime;
+    stepSession stepSesh;
     //private long numGoal, numSteps;
     private static final String TAG = "MainActivity";
     boolean isPaused = false;
@@ -68,7 +70,6 @@ public class MainActivity extends AppCompatActivity
                 launchBarChart();
             }
         });
-
         cal = Calendar.getInstance();
         timeEntered = (EditText)findViewById(R.id.edit_Time);
 
@@ -94,6 +95,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v ){
                 // get start time a timer
+                stepSesh = new stepSession(MainActivity.this);
+                stepSesh.start();
                 time.setStart();
                 timerClock.setText("Have Fun Stepping!");
                 button_start.setVisibility(View.INVISIBLE);
@@ -105,11 +108,14 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v ){
                 // TODO use ellapsed time for stats and average
+                stepSesh.end();
+
                 ellapsedTimer = time.getEllapsedTime();
+
                 button_start.setVisibility(View.VISIBLE);
                 button_end.setVisibility(View.INVISIBLE);
                 timerClock.setText("Time Your Steps!");
-                statsLaunch();
+                statsLaunch(stepSesh.calculateSessionSpeed() , stepSesh.getSessionSteps(),stepSesh.getTotalTime());
                 //Toast.makeText(MainActivity.this, Long.toString(ellapsedTimer), Toast.LENGTH_LONG).show();
                 if(ellapsedTimer > 200000000) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
@@ -219,7 +225,13 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    private void statsLaunch() {
+    private void statsLaunch(double speed, long steps, long time) {
+        SharedPreferences.Editor statsEdit = getSharedPreferences("stats", MODE_PRIVATE).edit();
+        statsEdit.putLong("speed", (long)speed);
+        statsEdit.putLong("steps", steps);
+        statsEdit.putLong("time", time);
+        statsEdit.apply();
+
         Intent intent = new Intent(this, StatsDialog.class);
         startActivity(intent);
     }

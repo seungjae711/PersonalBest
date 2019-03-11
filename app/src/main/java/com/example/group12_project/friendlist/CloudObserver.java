@@ -8,7 +8,7 @@ public interface CloudObserver {
 
     void MphChange(int mph);
 
-    void DailyDataChange(Calendar caldnear, long stepCount);
+    void DailyDataChange(Calendar calendar, long stepCount);
 
     /**
      *  Update local friend list

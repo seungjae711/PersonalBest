@@ -29,9 +29,13 @@ import com.example.group12_project.fitness.FitnessService;
 import com.example.group12_project.fitness.FitnessServiceFactory;
 import com.example.group12_project.fitness.GoogleFitAdapter;
 import com.example.group12_project.fitness.SensorSetter;
+import com.example.group12_project.friendlist.User;
+import com.example.group12_project.friendlist.UserCloud;
+import com.example.group12_project.friendlist.UserCloudMediator;
 import com.example.group12_project.set_goal.CustomGoal;
 import com.example.group12_project.set_goal.GoalDialog;
 import com.example.group12_project.set_goal.GoalManagement;
+import com.google.firebase.FirebaseApp;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -56,12 +60,17 @@ public class MainActivity extends AppCompatActivity
     Calendar cal;
     EditText timeEntered;
 
+    User user1;
+    UserCloud cloud1;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -166,6 +175,7 @@ public class MainActivity extends AppCompatActivity
         goal.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
+                UserCloudMediator med = new UserCloudMediator(user1, cloud1);
                 launchActivity();
             }
         });

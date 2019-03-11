@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 UserCloudMediator med = new UserCloudMediator(user1, cloud1);
+                med.GoalChange(1);
                 launchActivity();
             }
         });

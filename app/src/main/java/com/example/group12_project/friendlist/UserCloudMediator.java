@@ -3,10 +3,14 @@ package com.example.group12_project.friendlist;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserCloudMediator implements CloudObserver, UserObserver{
 
@@ -14,7 +18,9 @@ public class UserCloudMediator implements CloudObserver, UserObserver{
     UserCloud cloud;
 
     FirebaseDatabase database;
-    DatabaseReference ref;
+//    DatabaseReference ref;
+
+    CollectionReference ref;
 
     public UserCloudMediator(User user, UserCloud cloud){
 
@@ -22,11 +28,15 @@ public class UserCloudMediator implements CloudObserver, UserObserver{
         this.cloud = cloud;
         this.user = user;
         database = FirebaseDatabase.getInstance();
-        ref = database.getInstance().getReference();
+        ref = FirebaseFirestore.getInstance().collection("test");
 
     }
 
     public void GoalChange(int goal){
+        Map<String, String> map = new HashMap<>();
+        map.put("row1", "test1");
+        map.put("row2", "test2");
+        ref.add(map);
     }
 
     public void MphChange(int mph){}

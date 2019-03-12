@@ -1,15 +1,16 @@
 package com.example.group12_project.friendlist;
 
-import java.util.Calendar;
+import java.util.Map;
 
 public interface CloudObserver {
 
     /**
      *  Update local friend list
+     * @param newFriends
      */
-    void onCloudFriendChange(String newFriend);
+    void onCloudFriendChange(Map<String, Object> newFriends);
 
-    void onCloudRequestChange(String newRequest);
+    void onCloudRequestChange(Map<String, Object> newRequest);
 
 
 }

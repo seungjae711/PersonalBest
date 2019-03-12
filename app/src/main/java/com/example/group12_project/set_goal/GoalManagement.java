@@ -22,11 +22,13 @@ public class GoalManagement {
 
     public GoalManagement(Activity activity) {
         this.activity = activity;
+        numSteps = numGoal = 0;
     }
 
     public void updateGoal(TextView goal) {
         SharedPreferences storedGoal = activity.getSharedPreferences("storedGoal", MODE_PRIVATE);
         goal.setText(storedGoal.getString("goal", ""));
+        numGoal = Long.parseLong(storedGoal.getString("goal", ""));
     }
 
     public void setGoal(String newGoal) {
@@ -41,8 +43,8 @@ public class GoalManagement {
     public void checkIfHalfGoal() {
         SharedPreferences storedGoal = activity.getSharedPreferences("storedGoal", MODE_PRIVATE);
         TextView stepsTv = activity.findViewById(R.id.daily_steps);
-        numSteps = Long.parseLong(stepsTv.getText().toString());
-        numGoal = Long.parseLong(storedGoal.getString("goal", ""));
+//        numSteps = Long.parseLong(stepsTv.getText().toString());
+//        numGoal = Long.parseLong(storedGoal.getString("goal", ""));
 
         if ((numSteps >= (numGoal / 2)) && (numSteps < numGoal)) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this.activity);
@@ -66,8 +68,8 @@ public class GoalManagement {
 
         SharedPreferences storedGoal = activity.getSharedPreferences("storedGoal", MODE_PRIVATE);
         TextView stepsTv = activity.findViewById(R.id.daily_steps);
-        numSteps = Long.parseLong(stepsTv.getText().toString());
-        numGoal = Long.parseLong(storedGoal.getString("goal", ""));
+//        numSteps = Long.parseLong(stepsTv.getText().toString());
+//        numGoal = Long.parseLong(storedGoal.getString("goal", ""));
 
         //if goal is reached
         if (numSteps >= numGoal) {

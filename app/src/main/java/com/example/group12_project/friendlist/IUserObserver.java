@@ -2,7 +2,7 @@ package com.example.group12_project.friendlist;
 
 import java.util.Map;
 
-public interface UserObserver {
+public interface IUserObserver {
 
     /**
      * update cloud friend change

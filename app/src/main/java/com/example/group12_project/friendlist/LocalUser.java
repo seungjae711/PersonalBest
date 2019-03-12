@@ -1,5 +1,6 @@
 package com.example.group12_project.friendlist;
 
+import android.app.Activity;
 import android.util.Log;
 
 import com.example.group12_project.set_goal.GoalManagement;
@@ -12,7 +13,7 @@ import java.util.Map;
 
 public class LocalUser implements IUser{
 
-    private Collection<UserObserver> observers;
+    private Collection<IUserObserver> observers;
 
     private Collection<String> friendRequests;
 
@@ -20,11 +21,11 @@ public class LocalUser implements IUser{
 
     private Map<String, Integer> history;
 
-    GoalManagement goalManagement;
+    public GoalManagement goalManagement;
 
     private String id;
 
-    final String userTAG = "Local user: ";
+    final private String userTAG = "Local user: ";
 
     private int height;
 
@@ -40,35 +41,57 @@ public class LocalUser implements IUser{
         friendList = new HashSet<>();
     }
 
-    public void register(UserObserver userObserver){
-        observers.add(userObserver);
+    public void register(IUserObserver IUserObserver){
+        observers.add(IUserObserver);
     }
 
-    public void unregister(UserObserver userObserver){
-        observers.remove(userObserver);
+    public void unregister(IUserObserver IUserObserver){
+        observers.remove(IUserObserver);
     }
 
     /**
-     * update local friend list and update observers
+     * getter method for user id
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * update local friend list and update observers due to own action
      * @param friendToAdd id of the friend to add
      */
-    private void updateFriendList(String friendToAdd){
+    private void updateFriendListLocal(String friendToAdd){
         friendList.add(friendToAdd);
         Log.d(userTAG, "friend added: " + friendToAdd);
-        for (UserObserver observer : this.observers) {
+        for (IUserObserver observer : this.observers) {
             observer.onLocalFriendChange(friendToAdd);
         }
     }
 
     /**
-     * update local friend requests and update observers
-     * @param friendToAdd id of the friend to add to the request list
+     * update local friend list due to cloud change
+     * @param newFriends map representing all friends from cloud
      */
-    private void updateFriendRequests(String friendToAdd) {
-        friendRequests.add(friendToAdd);
-        Log.d(userTAG, "request added: " + friendToAdd);
-        for (UserObserver observer : this.observers) {
-            observer.onLocalRequestChange(friendToAdd);
+    void updateFriendList(Map<String, Object> newFriends) {
+        friendRequests = new HashSet<>(newFriends.keySet());;
+    }
+
+    /**
+     * update local friend requests and update observers
+     * @param newRequests newRequests from cloud
+     */
+    void updateFriendRequests(Map<String, Object> newRequests) {
+        friendRequests = new HashSet<>(newRequests.keySet());
+    }
+
+    /**
+     * write a request to other user's section
+     * @param request id of the user to write request
+     */
+    private void writeRequest(String request) {
+        Log.d(userTAG, "write request to " + request);
+        for (IUserObserver observer : this.observers) {
+            observer.onLocalRequestChange(request);
         }
     }
 
@@ -92,13 +115,23 @@ public class LocalUser implements IUser{
         // check friend requests from others, if exist, add friend
         if (friendRequests.contains(friendId)) {
             friendRequests.remove(friendId);
-            updateFriendList(friendId);
+            updateFriendListLocal(friendId);
             return true;
         }
 
         // add own user id to friend's requests list
-        updateFriendRequests(friendId);
+        writeRequest(friendId);
         return true;
+    }
+
+    //TODO get friends data
+
+    /**
+     * initialize goal management
+     * @param activity activity for goal management
+     */
+    public void setGoalManagement(Activity activity) {
+        goalManagement = new GoalManagement(activity);
     }
 
     /**
@@ -108,7 +141,7 @@ public class LocalUser implements IUser{
     public void setGoal(String newGoal) {
         goalManagement.setGoal(newGoal);
         Log.d(userTAG, "changed local goal to " + newGoal);
-        for(UserObserver observer : this.observers) {
+        for(IUserObserver observer : this.observers) {
             observer.onLocalGoalChange(Integer.parseInt(newGoal));
         }
     }
@@ -120,7 +153,7 @@ public class LocalUser implements IUser{
     public void setHeight(int height) {
         this.height = height;
         Log.d(userTAG, "height set to " + height);
-        for (UserObserver observer : this.observers) {
+        for (IUserObserver observer : this.observers) {
             observer.onLocalHeightChange(height);
         }
     }
@@ -134,7 +167,7 @@ public class LocalUser implements IUser{
         Map<String, Integer> update = new HashMap<>();
         update.put(date, steps);
         Log.d(userTAG, "add history" + date + steps);
-        for (UserObserver observer : this.observers) {
+        for (IUserObserver observer : this.observers) {
             observer.onLocalHistoryChange(update);
         }
     }

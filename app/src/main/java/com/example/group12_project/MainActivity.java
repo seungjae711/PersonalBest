@@ -29,8 +29,10 @@ import com.example.group12_project.fitness.FitnessServiceFactory;
 import com.example.group12_project.fitness.GoogleFitAdapter;
 import com.example.group12_project.friendlist.LocalUser;
 import com.example.group12_project.friendlist.UserCloud;
+import com.example.group12_project.friendlist.UserCloudMediator;
 import com.example.group12_project.set_goal.CustomGoal;
 import com.example.group12_project.set_goal.GoalManagement;
+import com.google.firebase.FirebaseApp;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -49,13 +51,13 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "MainActivity";
     boolean isPaused = false;
     boolean goalReached = false;
-    private GoalManagement goalManagement;
 
     Calendar cal;
     EditText timeEntered;
 
     LocalUser localUser;
-    UserCloud cloud1;
+    UserCloud userCloud;
+    UserCloudMediator userCloudMediator;
 
     //TODO delete mocking user id
     String userid = "user1";
@@ -68,8 +70,13 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // create local user
+        // create friend list objects
+        FirebaseApp.initializeApp(this);
         localUser = new LocalUser(userid);
+        userCloud = new UserCloud(localUser.getId());
+        userCloudMediator = new UserCloudMediator(localUser, userCloud);
+        localUser.register(userCloudMediator);
+        userCloud.register(userCloudMediator);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -155,14 +162,14 @@ public class MainActivity extends AppCompatActivity
             firstLaunch();
         }
 
-        goalManagement = new GoalManagement(this);
+        localUser.setGoalManagement(this);
 
 
         goalString = findViewById(R.id.goal_string);
         goal = findViewById(R.id.goal);
 
 
-        goalManagement.updateGoal(goal);
+        localUser.goalManagement.updateGoal(goal);
 
         //if user clicks goal they can change to new goal
         goalString.setOnClickListener(new View.OnClickListener() {
@@ -291,8 +298,8 @@ public class MainActivity extends AppCompatActivity
             //Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
 
             Log.i(TAG, "Checking Goal");
-            if(!goalManagement.checkIfGoalReached(isPaused)){
-                goalManagement.checkIfHalfGoal();
+            if(!localUser.goalManagement.checkIfGoalReached(isPaused)){
+                localUser.goalManagement.checkIfHalfGoal();
             }
         }
     }
@@ -382,7 +389,7 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //if user updates goal
         if (resultCode == 1) {
-            goalManagement.updateGoal(goal);
+            localUser.goalManagement.updateGoal(goal);
             isPaused = false;
         }
         //If authentication was required during google fit setup, this will be called after the user authenticates

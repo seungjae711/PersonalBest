@@ -1,12 +1,10 @@
 package com.example.group12_project.friendlist;
 
-import java.util.Collection;
-
 public interface IUser {
 
-    void register(UserObserver userObserver);
+    void register(IUserObserver IUserObserver);
 
-    void unregister(UserObserver userObserver);
+    void unregister(IUserObserver IUserObserver);
 
     void setGoal(String newGoal);
 

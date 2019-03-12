@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -28,14 +27,10 @@ import java.util.Calendar;
 import com.example.group12_project.fitness.FitnessService;
 import com.example.group12_project.fitness.FitnessServiceFactory;
 import com.example.group12_project.fitness.GoogleFitAdapter;
-import com.example.group12_project.fitness.SensorSetter;
-import com.example.group12_project.friendlist.User;
+import com.example.group12_project.friendlist.LocalUser;
 import com.example.group12_project.friendlist.UserCloud;
-import com.example.group12_project.friendlist.UserCloudMediator;
 import com.example.group12_project.set_goal.CustomGoal;
-import com.example.group12_project.set_goal.GoalDialog;
 import com.example.group12_project.set_goal.GoalManagement;
-import com.google.firebase.FirebaseApp;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -54,14 +49,16 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "MainActivity";
     boolean isPaused = false;
     boolean goalReached = false;
-
     private GoalManagement goalManagement;
 
     Calendar cal;
     EditText timeEntered;
 
-    User user1;
+    LocalUser localUser;
     UserCloud cloud1;
+
+    //TODO delete mocking user id
+    String userid = "user1";
 
 
     @Override
@@ -71,6 +68,8 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // create local user
+        localUser = new LocalUser(userid);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -170,14 +169,16 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v)
             {
                 launchActivity();
+                SharedPreferences newGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+                localUser.setGoal(newGoal.getString("goal", ""));
             }
         });
         goal.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
-                UserCloudMediator med = new UserCloudMediator(user1, cloud1);
-                med.GoalChange(1);
                 launchActivity();
+                SharedPreferences newGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+                localUser.setGoal(newGoal.getString("goal", ""));
             }
         });
 
@@ -251,9 +252,12 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
         SharedPreferences.Editor edit = storedGoal.edit();
         edit.putString("goal", "5");
+        localUser.setGoal("5");
         edit.putBoolean("firstStart", false);
         edit.apply();
         Intent intent = new Intent(this, HeightManager.class);
+        SharedPreferences height = getSharedPreferences("height", MODE_PRIVATE);
+        localUser.setHeight(height.getInt("height", -1));
         startActivity(intent);
     }
 

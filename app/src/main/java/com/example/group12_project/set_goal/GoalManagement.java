@@ -33,6 +33,7 @@ public class GoalManagement {
         SharedPreferences storedGoal = activity.getSharedPreferences("storedGoal", MODE_PRIVATE);
         SharedPreferences.Editor editGoal = storedGoal.edit();
         editGoal.putString("goal", newGoal);
+        editGoal.apply();
         goal = activity.findViewById(R.id.goal);
         updateGoal(goal);
     }

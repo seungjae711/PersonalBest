@@ -6,12 +6,12 @@ public interface IUser {
 
     void register(UserObserver userObserver);
 
-    void unrgister(UserObserver userObserver);
+    void unregister(UserObserver userObserver);
 
-//    void updateFriendRequest(String request);
-//
-//    void updateFriendList(String friendToAdd);
-//
-//    void createFitnessService();
+    void setGoal(String newGoal);
+
+    void setHeight(int height);
+
+    void setHistory(String date, int steps);
 
 }

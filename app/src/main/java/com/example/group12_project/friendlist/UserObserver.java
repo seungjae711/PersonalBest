@@ -1,6 +1,6 @@
 package com.example.group12_project.friendlist;
 
-import java.util.Calendar;
+import java.util.Map;
 
 public interface UserObserver {
 
@@ -8,9 +8,15 @@ public interface UserObserver {
      * update cloud friend change
      * @param newFriend
      */
-    void cloudFriendChange(String newFriend);
+    void onLocalFriendChange(String newFriend);
 
-    void cloudRequestChange(String newRequest);
+    void onLocalRequestChange(String newRequest);
 
+    void onLocalGoalChange(int goal);
+
+    void onLocalHeightChange(int height);
+
+    void onLocalHistoryChange(Map<String, Integer> history);
 
 }
+

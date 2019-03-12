@@ -205,6 +205,12 @@ public class UserCloud implements ICloud {
             oberserver.onCloudFriendChange(this.working);
         }
     }
+
+    public Map<String, Object> readFriendData (String friendId) {
+        readFromCloud(friendId, DATA_KEY);
+        return this.working;
+    }
+
     /**
      * helper method for reading from cloud
      * @param adapter map to get from cloud
@@ -214,7 +220,7 @@ public class UserCloud implements ICloud {
     }
 
     /**
-     * read a map from cloud
+     * read a map from cloud to this.working
      * @param collection collection key
      * @param document document key
      */

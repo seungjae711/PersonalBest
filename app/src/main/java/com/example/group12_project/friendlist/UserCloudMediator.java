@@ -48,4 +48,8 @@ public class UserCloudMediator implements CloudObserver, IUserObserver {
     public void onCloudRequestChange(Map<String, Object> newRequest) {
         localUser.updateFriendRequests(newRequest);
     }
+
+    public Map<String, Object> readFriendData(String friendId) {
+        return cloud.readFriendData(friendId);
+    }
 }

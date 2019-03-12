@@ -124,7 +124,19 @@ public class LocalUser implements IUser{
         return true;
     }
 
-    //TODO get friends data
+    /**
+     * read friend's daily exercise from cloud
+     * this method delegate this responsibility to UserCloudMediator
+     * this method require the requested friend does exist on cloud
+     * @param friendID user id of the friend to read his/her data
+     */
+    public Map<String, Object> readFriendData(String friendID) {
+        Map<String, Object> friendsData = new HashMap<>();
+        for (IUserObserver observer : this.observers) {
+            friendsData = observer.readFriendData(friendID);
+        }
+        return friendsData;
+    }
 
     /**
      * initialize goal management

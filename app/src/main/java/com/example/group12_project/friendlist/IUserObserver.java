@@ -18,5 +18,7 @@ public interface IUserObserver {
 
     void onLocalHistoryChange(Map<String, Integer> history);
 
+    Map<String, Object> readFriendData(String friendId);
+
 }
 

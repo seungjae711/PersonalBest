@@ -47,7 +47,7 @@ public class stepSession {
     Session session;
     MainActivity activity;
     Task<Void> sesTask;
-    long endTime, startTime;
+    long endTime = 1000, startTime;
     Calendar cal;
     long steps;
     private final int FEET_TO_MILE = 5280;
@@ -58,55 +58,85 @@ public class stepSession {
 
         lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(activity);
 
-
         cal = Calendar.getInstance();
+
+
         Date day = new Date();
         cal.setTime(day);
         String date = Integer.toString(cal.get(Calendar.YEAR)) + " : " + Integer.toString(cal.get(Calendar.DAY_OF_YEAR));
 
+        startTime = cal.getTimeInMillis();
+
         Log.i(TAG, "Starting session. Date is: " + date);
+        String id = cal.toString();
 
         session = new Session.Builder()
-                .setName("Session")
-                .setIdentifier(date + " : " + Integer.toString((int)startTime))
-                .setDescription("Step Tracking Session")
+         //       .setName("Step Session: " + date + " : " + Integer.toString((int)startTime))
+                .setIdentifier(id)
+              //  .setDescription("Step Tracking Session" + Integer.toString((int)startTime))
                 .setStartTime(cal.getTimeInMillis(), TimeUnit.MILLISECONDS)
                 .build();
     }
 
     public void start() {
+        setCal();
+        startTime = cal.getTimeInMillis();
+        Log.i(TAG, "Session start time: " + startTime);
+        /*
         sesTask = Fitness.getSessionsClient(activity, lastSignedInAccount)
                                 .startSession(session);
         sesTask.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Log.i(TAG, "Starting Session");
+                startTime = session.getStartTime(TimeUnit.SECONDS);
+                Log.i(TAG, "Session start time: " + startTime%10000);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Failed session start", e);
             }
         });
-        startTime = session.getStartTime(TimeUnit.SECONDS);
+        startTime = session.getStartTime(TimeUnit.SECONDS); */
+
     }
 
 
     public void end() {
+        setCal();
+        endTime = cal.getTimeInMillis();
+        Log.i(TAG, "Session end time: " + endTime);
+        insertSession();
+        /*
         Task<List<Session>> endSes = Fitness.getSessionsClient(activity, lastSignedInAccount)
-                                        .stopSession(session.getIdentifier());
+                                        .stopSession(null);
         endSes.addOnSuccessListener(new OnSuccessListener<List<Session>>() {
             @Override
             public void onSuccess(List<Session> s) {
                 Log.i(TAG, "Inserting Session");
                 endTime = session.getEndTime(TimeUnit.SECONDS);
-              //  insertSession(); breaks code cause endtime is always 0 somehow
+                Log.i(TAG, "Session end time: " + endTime);
+                //insertSession(); //breaks code cause endtime is always 0 somehow
             }
         });
-        endTime = startTime + 1000; //Lazy test to see that stats dialog works
+        */
+        //endTime = startTime + 1000; //Lazy test to see that stats dialog works
     }
 
 
 
     private void insertSession() {
+        session = new Session.Builder()
+                .setName("Step Session")
+                .setIdentifier(cal.toString())
+                .setDescription("Step Tracking")
+                .setStartTime(startTime, TimeUnit.MILLISECONDS)
+                .setEndTime(endTime, TimeUnit.MILLISECONDS)
+                .build();
+
         SessionInsertRequest insertRequest = new SessionInsertRequest.Builder()
                 .setSession(session)
-                //.addDataSet(speedDataSet)
                 .build();
 
         Fitness.getSessionsClient(activity, GoogleSignIn.getLastSignedInAccount(activity))
@@ -144,16 +174,29 @@ public class stepSession {
         List<DataSet> data = reader.getData();
 
         long stepWalked = getSteps(data);
+        Log.i(TAG,"Steps walked: " + stepWalked);
         //Get the intentional walking time
         //calculate total distance from steps*stride length
         double distance = stepWalked * stride;
-        double averageSpeed = (distance/FEET_TO_MILE)/(endTime/60 - startTime/60);
+        Log.i(TAG,"Distance: " + distance);
+
+        double timeInSeconds = (endTime - startTime)/1000;
+        Log.i(TAG,"Time in seconds: " + timeInSeconds);
+
+
+        double averageSpeed = (distance/FEET_TO_MILE)/(timeInSeconds/3600);
+
+        Log.i(TAG,"Speed: " + averageSpeed);
+
 
         return averageSpeed;
     }
 
     private long getSteps(List<DataSet> data) {
-        if (data != null && data.size() > 0) {
+        steps = 100;
+        return 100; //Returning only 100 right now for testing with emulator
+                    //Comment out the above 2 lines and uncomment below for testing with phone
+        /*if (data != null && data.size() > 0) {
             for (DataSet ds : data) {
                 Log.i(TAG, "Data returned for Data type: " + ds.getDataType().getName());
                 DateFormat dateFormat = getTimeInstance();
@@ -172,15 +215,19 @@ public class stepSession {
                 }
             }
         }
-        return 100; //NonZero value for testing
+        return 100; //NonZero value for testing */
     }
     public long getSessionSteps() {
         return steps;
     }
 
     public long getTotalTime() {
-        return endTime - startTime;
+        return (endTime - startTime)/1000;
     }
 
+    private void setCal() {
+        Date day = new Date();
+        cal.setTime(day);
+    }
 
 }

@@ -32,10 +32,15 @@ import com.example.group12_project.fitness.SensorSetter;
 import com.example.group12_project.set_goal.CustomGoal;
 import com.example.group12_project.set_goal.GoalDialog;
 import com.example.group12_project.set_goal.GoalManagement;
+import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.fitness.Fitness;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-        
+
+    private GoogleApiClient mGoogleApiClient;
     private TextView timerClock;
     private Button button_start, button_end;
     private TimerKeeper time;
@@ -70,6 +75,7 @@ public class MainActivity extends AppCompatActivity
                 launchBarChart();
             }
         });
+
         cal = Calendar.getInstance();
         timeEntered = (EditText)findViewById(R.id.edit_Time);
 
@@ -227,7 +233,7 @@ public class MainActivity extends AppCompatActivity
 
     private void statsLaunch(double speed, long steps, long time) {
         SharedPreferences.Editor statsEdit = getSharedPreferences("stats", MODE_PRIVATE).edit();
-        statsEdit.putLong("speed", (long)speed);
+        statsEdit.putFloat("speed", (float)speed);
         statsEdit.putLong("steps", steps);
         statsEdit.putLong("time", time);
         statsEdit.apply();

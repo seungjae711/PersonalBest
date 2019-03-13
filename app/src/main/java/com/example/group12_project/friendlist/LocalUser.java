@@ -66,7 +66,7 @@ public class LocalUser implements IUser {
      * update local friend list and update observers due to own action
      * @param friendToAdd id of the friend to add
      */
-    private void updateFriendListLocal(String friendToAdd){
+    public void updateFriendListLocal(String friendToAdd){
         friendList.add(friendToAdd);
         Log.d(userTAG, "friend added: " + friendToAdd);
         for (IUserObserver observer : this.observers) {
@@ -203,6 +203,11 @@ public class LocalUser implements IUser {
         for (IUserObserver observer : this.observers) {
             observer.onLocalHistoryChange(update);
         }
+    }
+
+
+    public Collection<String> getFriendList(){
+        return this.friendList;
     }
 
 }

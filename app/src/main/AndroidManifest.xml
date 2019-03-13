@@ -9,6 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".friendlist.FriendListActivity"
+            android:label="Friends"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:parentActivityName="com.example.group12_project.MainActivity"
+            />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -22,25 +29,28 @@
         <activity
             android:name=".set_goal.RecommendedGoal"
             android:label="Recommend Goal"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".set_goal.CustomGoal"
             android:label="Custom Goal"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".set_goal.GoalDialog"
             android:configChanges="orientation"
             android:screenOrientation="sensor"
-            android:theme="@style/NoTitleDialog"></activity>
-        <activity android:name=".StepChart"
+            android:theme="@style/NoTitleDialog" />
+        <activity
+            android:name=".StepChart"
             android:label="Step Chart"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".HeightManager"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".HeightManager"
             android:label="Height Manager"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".StatsDialog"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".StatsDialog"
             android:label="Stats Dialog"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

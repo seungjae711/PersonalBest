@@ -151,6 +151,14 @@ public class LocalUser implements IUser {
         return friendsData;
     }
 
+    public Map<String, Object> readFriendGoal(String friendID) {
+        Map<String, Object> friendsGoal = new HashMap<>();
+        for (IUserObserver observer : this.observers) {
+            friendsGoal = observer.readFriendGoal(friendID);
+        }
+        return friendsGoal;
+    }
+
     /**
      * initialize goal management
      * @param activity activity for goal management

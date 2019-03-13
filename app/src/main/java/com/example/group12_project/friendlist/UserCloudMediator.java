@@ -52,4 +52,8 @@ public class UserCloudMediator implements CloudObserver, IUserObserver {
     public Map<String, Object> readFriendData(String friendId) {
         return cloud.readFriendData(friendId);
     }
+
+    public Map<String, Object> readFriendGoal(String friendId) {
+        return cloud.readFriendGoal(friendId);
+    }
 }

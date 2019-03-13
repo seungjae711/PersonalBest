@@ -206,8 +206,23 @@ public class UserCloud implements ICloud {
         }
     }
 
-    public Map<String, Object> readFriendData (String friendId) {
+    /**
+     * read exercise data from user with passed in id
+     * @param friendId id of the user to read from
+     * @return this.working should contain exercise data by now
+     */
+    Map<String, Object> readFriendData (String friendId) {
         readFromCloud(friendId, DATA_KEY);
+        return this.working;
+    }
+
+    /**
+     * read goal from user with passed in id
+     * @param friendId id of the user to read from
+     * @return this.working should contain goal by now
+     */
+    Map<String, Object> readFriendGoal(String friendId) {
+        readFromCloud(friendId, GOAL_KEY);
         return this.working;
     }
 

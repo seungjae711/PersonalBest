@@ -4,10 +4,6 @@ import java.util.Map;
 
 public interface IUserObserver {
 
-    /**
-     * update cloud friend change
-     * @param newFriend
-     */
     void onLocalFriendChange(String newFriend);
 
     void onLocalRequestChange(String newRequest);
@@ -19,6 +15,8 @@ public interface IUserObserver {
     void onLocalHistoryChange(Map<String, Integer> history);
 
     Map<String, Object> readFriendData(String friendId);
+
+    Map<String, Object> readFriendGoal(String friendId);
 
 }
 

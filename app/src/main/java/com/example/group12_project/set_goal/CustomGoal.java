@@ -12,6 +12,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.group12_project.R;
+import com.example.group12_project.friendlist.LocalUser;
+
+import java.io.Serializable;
 
 public class CustomGoal extends AppCompatActivity {
     public Button accept, cancel;
@@ -19,6 +22,7 @@ public class CustomGoal extends AppCompatActivity {
     double minSteps = 2000;
     double maxSteps = 30000;
     String custGoal = "";
+    LocalUser localUser;
 
 
     @Override

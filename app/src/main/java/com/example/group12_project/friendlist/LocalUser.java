@@ -3,6 +3,10 @@ package com.example.group12_project.friendlist;
 import android.app.Activity;
 import android.util.Log;
 
+import com.example.group12_project.MainActivity;
+import com.example.group12_project.fitness.FitnessService;
+import com.example.group12_project.fitness.FitnessServiceFactory;
+import com.example.group12_project.fitness.GoogleFitAdapter;
 import com.example.group12_project.set_goal.GoalManagement;
 
 import java.util.ArrayList;
@@ -11,7 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-public class LocalUser implements IUser{
+public class LocalUser implements IUser {
 
     private Collection<IUserObserver> observers;
 
@@ -22,6 +26,8 @@ public class LocalUser implements IUser{
     private Map<String, Integer> history;
 
     public GoalManagement goalManagement;
+
+    public FitnessService fitnessService;
 
     private String id;
 
@@ -95,8 +101,15 @@ public class LocalUser implements IUser{
         }
     }
 
-    private void createFitnessService(){
-        //TODO
+    public void createFitnessService(String serviceKey, MainActivity activity){
+        FitnessServiceFactory.put(serviceKey, new FitnessServiceFactory.BluePrint() {
+            @Override
+            public FitnessService create(MainActivity mainActivity) {
+                return new GoogleFitAdapter(mainActivity);
+            }
+        });
+        fitnessService = FitnessServiceFactory.create(serviceKey, activity);
+        fitnessService.setup();
     }
 
     /**
@@ -168,6 +181,14 @@ public class LocalUser implements IUser{
         for (IUserObserver observer : this.observers) {
             observer.onLocalHeightChange(height);
         }
+    }
+
+    /**
+     * getter method for height
+     * @return user height
+     */
+    public int getHeight() {
+        return height;
     }
 
     /**

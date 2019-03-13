@@ -16,6 +16,7 @@ import com.example.group12_project.R;
 public class StatsDialog extends AppCompatActivity {
     public Button back;
     public TextView step, time, speed;
+    SharedPreferences stats;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +24,12 @@ public class StatsDialog extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.stats_dialog);
         this.setFinishOnTouchOutside(false);
+
+        stats = getSharedPreferences("stats", MODE_PRIVATE);
+
+        setSpeedText();
+        setStepsText();
+        setTimeText();
 
         back = (Button) findViewById(R.id.btn_return);
         back.setOnClickListener(new View.OnClickListener() {
@@ -32,6 +39,29 @@ public class StatsDialog extends AppCompatActivity {
             }
         });
 
+    }
+
+
+    private void setSpeedText() {
+        TextView avg_spd = findViewById(R.id.avg_spd);
+        avg_spd.setText(Long.toString(stats.getLong("speed", 0)));
+    }
+
+    private void setStepsText() {
+        TextView steps_taken = findViewById(R.id.steps_taken);
+        steps_taken.setText(Long.toString(stats.getLong("steps", 0)));
+    }
+
+    private void setTimeText() {
+        String timeFormat;
+        TextView time_elapsed = findViewById(R.id.time_elapsed);
+        Long time = stats.getLong("time", 0);
+        timeFormat = Long.toString(time/3600); //hours
+        time = time % 3600;
+        timeFormat = timeFormat + ":" + Long.toString(time/60); //minutes
+        time = time % 60;
+        timeFormat = timeFormat + ":" + Long.toString(time);
+        time_elapsed.setText(timeFormat);
     }
 
     @Override

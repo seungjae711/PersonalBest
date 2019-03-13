@@ -5,10 +5,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.icu.text.DateFormat;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -24,13 +24,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import com.example.group12_project.fitness.FitnessService;
-import com.example.group12_project.fitness.FitnessServiceFactory;
-import com.example.group12_project.fitness.GoogleFitAdapter;
+import com.example.group12_project.friendlist.LocalUser;
+import com.example.group12_project.friendlist.UserCloud;
+import com.example.group12_project.friendlist.UserCloudMediator;
 import com.example.group12_project.set_goal.CustomGoal;
-import com.example.group12_project.set_goal.GoalDialog;
-import com.example.group12_project.set_goal.GoalManagement;
+import com.google.firebase.FirebaseApp;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,15 +46,22 @@ public class MainActivity extends AppCompatActivity
     private BackgroundStepAsyncTask runner;
     private TextView daily_steps, goal, goalString;
     private Button addSteps, changeTime;
+    stepSession stepSesh;
     //private long numGoal, numSteps;
     private static final String TAG = "MainActivity";
     boolean isPaused = false;
     boolean goalReached = false;
 
-    private GoalManagement goalManagement;
-
     Calendar cal;
     EditText timeEntered;
+
+    LocalUser localUser;
+    UserCloud userCloud;
+    UserCloudMediator userCloudMediator;
+
+    //TODO delete mocking user id
+    String userid = "user1";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +70,17 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        /* create friend list objects */
+
+        FirebaseApp.initializeApp(this);
+        localUser = new LocalUser(userid);
+        userCloud = new UserCloud(localUser.getId());
+        userCloudMediator = new UserCloudMediator(localUser, userCloud);
+        localUser.register(userCloudMediator);
+        userCloud.register(userCloudMediator);
+
+        /* launch bar chart */
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,9 +88,10 @@ public class MainActivity extends AppCompatActivity
                 launchBarChart();
             }
         });
-
         cal = Calendar.getInstance();
         timeEntered = (EditText)findViewById(R.id.edit_Time);
+
+        /* drawer navigation */
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -81,7 +102,8 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         
-        /*Start and End Timer Button*/
+        /* intentional work out session */
+
         time = new TimerKeeper();
         timerClock = findViewById(R.id.time);
 
@@ -94,6 +116,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v ){
                 // get start time a timer
+                stepSesh = new stepSession(MainActivity.this);
+                stepSesh.start();
                 time.setStart();
                 timerClock.setText("Have Fun Stepping!");
                 button_start.setVisibility(View.INVISIBLE);
@@ -105,11 +129,14 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v ){
                 // TODO use ellapsed time for stats and average
+                stepSesh.end();
+
                 ellapsedTimer = time.getEllapsedTime();
+
                 button_start.setVisibility(View.VISIBLE);
                 button_end.setVisibility(View.INVISIBLE);
                 timerClock.setText("Time Your Steps!");
-                statsLaunch();
+                statsLaunch(stepSesh.calculateSessionSpeed() , stepSesh.getSessionSteps(),stepSesh.getTotalTime());
                 //Toast.makeText(MainActivity.this, Long.toString(ellapsedTimer), Toast.LENGTH_LONG).show();
                 if(ellapsedTimer > 200000000) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
@@ -127,58 +154,48 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        /* goal */
 
-    //    SharedPreferences sharedPreferences = getSharedPreferences("height", MODE_PRIVATE);
-     //   SharedPreferences.Editor spEditor = sharedPreferences.edit();
-
-        /*GOAL SETTING*/
         SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
-        SharedPreferences.Editor editor = storedGoal.edit();
-  //      spEditor.putInt("height",66);
 
         //set first goal during first login
         if(storedGoal.getBoolean("firstStart",true)){
             firstLaunch();
         }
 
-        goalManagement = new GoalManagement(this);
-
+        localUser.setGoalManagement(this);
 
         goalString = findViewById(R.id.goal_string);
         goal = findViewById(R.id.goal);
 
-
-        goalManagement.updateGoal(goal);
+        localUser.goalManagement.updateGoal(goal);
 
         //if user clicks goal they can change to new goal
         goalString.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
-                launchActivity();
+                customGoalActivity();
+                SharedPreferences newGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+                localUser.setGoal(newGoal.getString("goal", ""));
             }
         });
         goal.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
-                launchActivity();
+                customGoalActivity();
+                SharedPreferences newGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+                localUser.setGoal(newGoal.getString("goal", ""));
             }
         });
 
+        /* fitness service setup */
 
-        // Yixiang's implementation on basic daily steps counting
         daily_steps = findViewById(R.id.daily_steps);
-        FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
-            @Override
-            public FitnessService create(MainActivity mainActivity) {
-                return new GoogleFitAdapter(mainActivity);
-            }
-        });
+        localUser.createFitnessService(fitnessServiceKey, this);
 
-        /*CREATE FITNESS SERVICE*/
-        fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
-        fitnessService.setup();
 
-        // starting async tasks
+        /* starting async tasks */
+
         runner = new BackgroundStepAsyncTask();
         runner.execute(0);
 
@@ -209,36 +226,71 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void launchActivity() {
+    /**
+     * go to the activity to custom goal
+     */
+    private void customGoalActivity() {
         Intent intent = new Intent(this, CustomGoal.class);
         startActivityForResult(intent, 1);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //if user updates goal
+        if (resultCode == 1) {
+            localUser.setGoal(localUser.goalManagement.updateGoal(goal));
+            isPaused = false;
+        }
+        //If authentication was required during google fit setup, this will be called after the user authenticates
+        else if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == localUser.fitnessService.getRequestCode()) {
+                localUser.fitnessService.update_daily_steps();
+            }
+        } else {
+            Log.e(TAG, "ERROR, google fit result code: " + resultCode);
+        }
+    }
+
+    /**
+     * show bar chart of recent history
+     */
     private void launchBarChart() {
         Intent intent = new Intent(this, StepChart.class);
         startActivity(intent);
     }
 
-    private void statsLaunch() {
+
+    private void statsLaunch(double speed, long steps, long time) {
+        SharedPreferences.Editor statsEdit = getSharedPreferences("stats", MODE_PRIVATE).edit();
+        statsEdit.putLong("speed", (long)speed);
+        statsEdit.putLong("steps", steps);
+        statsEdit.putLong("time", time);
+        statsEdit.apply();
+
         Intent intent = new Intent(this, StatsDialog.class);
         startActivity(intent);
     }
 
+    /**
+     * setup parameters for first launch
+     */
     private void firstLaunch() {
         SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
         SharedPreferences.Editor edit = storedGoal.edit();
         edit.putString("goal", "5");
+        localUser.setGoal("5");
         edit.putBoolean("firstStart", false);
         edit.apply();
         Intent intent = new Intent(this, HeightManager.class);
+        SharedPreferences height = getSharedPreferences("height", MODE_PRIVATE);
+        localUser.setHeight(height.getInt("height", -1));
         startActivity(intent);
     }
 
-
-    // async task for update steps on background every 5 seconds
+    /**
+     * update steps every 5 second in background
+     * */
     private class BackgroundStepAsyncTask extends AsyncTask<Integer, Integer, Void> {
-
-        int i;    // DELETE debug value
 
         // update steps every 5 seconds
         @Override
@@ -249,10 +301,9 @@ public class MainActivity extends AppCompatActivity
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                fitnessService.update_daily_steps();
-                i++;
+                localUser.fitnessService.update_daily_steps();
                 if(!isPaused) {
-                    publishProgress(i);
+                    publishProgress();
                 }
 
             }
@@ -264,8 +315,8 @@ public class MainActivity extends AppCompatActivity
             //Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
 
             Log.i(TAG, "Checking Goal");
-            if(!goalManagement.checkIfGoalReached(isPaused)){
-                goalManagement.checkIfHalfGoal();
+            if(!localUser.goalManagement.checkIfGoalReached(isPaused)){
+                localUser.goalManagement.checkIfHalfGoal();
             }
         }
     }
@@ -348,24 +399,6 @@ public class MainActivity extends AppCompatActivity
         double averageSpeed = distance/timeElapsed;
 
         return averageSpeed;
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //if user updates goal
-        if (resultCode == 1) {
-            goalManagement.updateGoal(goal);
-            isPaused = false;
-        }
-        //If authentication was required during google fit setup, this will be called after the user authenticates
-        else if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == fitnessService.getRequestCode()) {
-                fitnessService.update_daily_steps();
-            }
-        } else {
-            Log.e(TAG, "ERROR, google fit result code: " + resultCode);
-        }
     }
     
     @Override

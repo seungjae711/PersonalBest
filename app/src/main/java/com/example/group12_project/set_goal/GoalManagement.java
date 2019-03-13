@@ -1,6 +1,5 @@
 package com.example.group12_project.set_goal;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -8,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.TextView;
 
-import com.example.group12_project.MainActivity;
 import com.example.group12_project.R;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -22,17 +20,22 @@ public class GoalManagement {
 
     public GoalManagement(Activity activity) {
         this.activity = activity;
+        numSteps = numGoal = 0;
     }
 
-    public void updateGoal(TextView goal) {
+    public String updateGoal(TextView goal) {
         SharedPreferences storedGoal = activity.getSharedPreferences("storedGoal", MODE_PRIVATE);
-        goal.setText(storedGoal.getString("goal", ""));
+        String newGoal = storedGoal.getString("goal", "");
+        goal.setText(newGoal);
+        numGoal = Long.parseLong(newGoal);
+        return newGoal;
     }
 
     public void setGoal(String newGoal) {
         SharedPreferences storedGoal = activity.getSharedPreferences("storedGoal", MODE_PRIVATE);
         SharedPreferences.Editor editGoal = storedGoal.edit();
         editGoal.putString("goal", newGoal);
+        editGoal.apply();
         goal = activity.findViewById(R.id.goal);
         updateGoal(goal);
     }
@@ -40,8 +43,8 @@ public class GoalManagement {
     public void checkIfHalfGoal() {
         SharedPreferences storedGoal = activity.getSharedPreferences("storedGoal", MODE_PRIVATE);
         TextView stepsTv = activity.findViewById(R.id.daily_steps);
-        numSteps = Long.parseLong(stepsTv.getText().toString());
-        numGoal = Long.parseLong(storedGoal.getString("goal", ""));
+//        numSteps = Long.parseLong(stepsTv.getText().toString());
+//        numGoal = Long.parseLong(storedGoal.getString("goal", ""));
 
         if ((numSteps >= (numGoal / 2)) && (numSteps < numGoal)) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this.activity);
@@ -65,8 +68,8 @@ public class GoalManagement {
 
         SharedPreferences storedGoal = activity.getSharedPreferences("storedGoal", MODE_PRIVATE);
         TextView stepsTv = activity.findViewById(R.id.daily_steps);
-        numSteps = Long.parseLong(stepsTv.getText().toString());
-        numGoal = Long.parseLong(storedGoal.getString("goal", ""));
+//        numSteps = Long.parseLong(stepsTv.getText().toString());
+//        numGoal = Long.parseLong(storedGoal.getString("goal", ""));
 
         //if goal is reached
         if (numSteps >= numGoal) {

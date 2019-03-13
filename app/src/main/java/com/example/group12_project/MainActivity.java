@@ -24,7 +24,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 import com.example.group12_project.fitness.FitnessService;
 import com.example.group12_project.friendlist.FriendListActivity;
 import com.example.group12_project.friendlist.LocalUser;
@@ -227,6 +233,11 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        //TODO test here, delete later
+        Date date = Calendar.getInstance().getTime();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        String strDate = dateFormat.format(date);
+        localUser.setHistory(strDate, 99);
 
     }
 

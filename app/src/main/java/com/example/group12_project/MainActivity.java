@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //if user updates goal
         if (resultCode == 1) {
-            localUser.goalManagement.updateGoal(goal);
+            localUser.setGoal(localUser.goalManagement.updateGoal(goal));
             isPaused = false;
         }
         //If authentication was required during google fit setup, this will be called after the user authenticates
@@ -258,6 +258,7 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, StepChart.class);
         startActivity(intent);
     }
+
 
     private void statsLaunch(double speed, long steps, long time) {
         SharedPreferences.Editor statsEdit = getSharedPreferences("stats", MODE_PRIVATE).edit();

@@ -165,7 +165,7 @@ public class LocalUser implements IUser {
      */
     public void setGoal(String newGoal) {
         goalManagement.setGoal(newGoal);
-        Log.d(userTAG, "changed local goal to " + newGoal);
+        Log.d(userTAG, "update new goal to cloud " + newGoal);
         for(IUserObserver observer : this.observers) {
             observer.onLocalGoalChange(Integer.parseInt(newGoal));
         }

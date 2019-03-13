@@ -1,6 +1,5 @@
 package com.example.group12_project.set_goal;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -8,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.TextView;
 
-import com.example.group12_project.MainActivity;
 import com.example.group12_project.R;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -25,10 +23,12 @@ public class GoalManagement {
         numSteps = numGoal = 0;
     }
 
-    public void updateGoal(TextView goal) {
+    public String updateGoal(TextView goal) {
         SharedPreferences storedGoal = activity.getSharedPreferences("storedGoal", MODE_PRIVATE);
-        goal.setText(storedGoal.getString("goal", ""));
-        numGoal = Long.parseLong(storedGoal.getString("goal", ""));
+        String newGoal = storedGoal.getString("goal", "");
+        goal.setText(newGoal);
+        numGoal = Long.parseLong(newGoal);
+        return newGoal;
     }
 
     public void setGoal(String newGoal) {

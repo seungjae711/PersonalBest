@@ -2,11 +2,13 @@ package com.example.group12_project;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,11 +29,11 @@ import java.util.Calendar;
 import com.example.group12_project.fitness.FitnessService;
 import com.example.group12_project.fitness.FitnessServiceFactory;
 import com.example.group12_project.fitness.GoogleFitAdapter;
+import com.example.group12_project.friendlist.FriendListActivity;
 import com.example.group12_project.friendlist.LocalUser;
 import com.example.group12_project.friendlist.UserCloud;
 import com.example.group12_project.friendlist.UserCloudMediator;
 import com.example.group12_project.set_goal.CustomGoal;
-import com.example.group12_project.set_goal.GoalManagement;
 import com.google.firebase.FirebaseApp;
 
 public class MainActivity extends AppCompatActivity
@@ -88,12 +90,15 @@ public class MainActivity extends AppCompatActivity
         cal = Calendar.getInstance();
         timeEntered = (EditText)findViewById(R.id.edit_Time);
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        /**
+         * For the drawer menu items
+         */
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         
@@ -440,11 +445,16 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        Fragment fragment = null;
+        Bundle bundle = new Bundle();
 
+        if (id == R.id.nav_friends) {
+            launchFriendListActivity();
+        } else if (id == R.id.nav_mainpage) {
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
@@ -455,8 +465,16 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    /**
+     * launch friendlist screen
+     */
+    public void launchFriendListActivity(){
+        Intent intent = new Intent(this, FriendListActivity.class);
+        startActivity(intent);
     }
 }

@@ -38,8 +38,6 @@ public class FriendListViewAdapter extends ArrayAdapter<Friend> {
         int goal = getItem(position).getGoal();
         long currentStep = getItem(position).getCurrentStep();
 
-        Friend friend = new Friend(name,goal,currentStep);
-
         LayoutInflater inflater = LayoutInflater.from(context);
 
         //Not optimal design, might slow down mainthread with too many friends
@@ -54,6 +52,5 @@ public class FriendListViewAdapter extends ArrayAdapter<Friend> {
         tvCurrentStep.setText(String.valueOf(currentStep));
 
         return convertView;
-
     }
 }

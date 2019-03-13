@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.group12_project.MainActivity;
 import com.example.group12_project.R;
@@ -57,7 +58,7 @@ public class FriendListActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         //set up back navigation
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //Pupulate array with friend object
+        //Load list with current friend list
         for(String s : friendlist){
             Friend friend = new Friend(s,100,1000);
             friendArrayList.add(friend);
@@ -87,14 +88,15 @@ public class FriendListActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         userEmail = String.valueOf(inputFriend.getText());
+                        if(user.addFriend(userEmail)){
+                            friendArrayList.add(new Friend(userEmail,1500,15000));
+                        }
                     }
                 })
                 .setNegativeButton("Cancel", null)
                 .create();
         dialog.show();
 
-        //TODO: use the userEmail to call addfriend
+
     }
-
-
 }

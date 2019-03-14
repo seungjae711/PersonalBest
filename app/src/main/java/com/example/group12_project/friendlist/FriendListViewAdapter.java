@@ -35,7 +35,7 @@ public class FriendListViewAdapter extends ArrayAdapter<Friend> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         String name = getItem(position).getName();
-        int goal = getItem(position).getGoal();
+        long goal = getItem(position).getGoal();
         long currentStep = getItem(position).getCurrentStep();
 
         LayoutInflater inflater = LayoutInflater.from(context);

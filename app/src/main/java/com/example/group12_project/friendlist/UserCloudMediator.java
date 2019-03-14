@@ -17,17 +17,16 @@ public class UserCloudMediator implements CloudObserver, IUserObserver {
         this.localUser = localUser;
     }
 
-    public void onLocalGoalChange(int goal) {
-        cloud.setGoal(goal);
-    }
 
     public void onLocalHeightChange(int height) {
         cloud.setHeight(height);
     }
 
-    public void onLocalHistoryChange(Map<String, Integer> update) {
-        cloud.addHistory(update);
+    public void onSelfDataChange(SelfData selfData) {
+        cloud.addSelfData(selfData);
     }
+
+
 
     public void onLocalFriendChange(String newFriend) {
         cloud.addFriend(newFriend);
@@ -41,6 +40,14 @@ public class UserCloudMediator implements CloudObserver, IUserObserver {
      * Update local
      */
 
+    public void readFriendData(String friendId) {
+        cloud.readFriendData(friendId);
+    }
+
+    public void onFriendDataChange(SelfData selfData) {
+        localUser.changeFriendData(selfData);
+    }
+
     public void onCloudFriendChange(Map<String, Object> newFriends) {
         localUser.updateFriendList(newFriends);
     }
@@ -49,11 +56,4 @@ public class UserCloudMediator implements CloudObserver, IUserObserver {
         localUser.updateFriendRequests(newRequest);
     }
 
-    public Map<String, Object> readFriendData(String friendId) {
-        return cloud.readFriendData(friendId);
-    }
-
-    public Map<String, Object> readFriendGoal(String friendId) {
-        return cloud.readFriendGoal(friendId);
-    }
 }

@@ -31,6 +31,10 @@ public class GoalManagement {
         return newGoal;
     }
 
+    public long getGoal() {
+        return numGoal;
+    }
+
     public void setGoal(String newGoal) {
         SharedPreferences storedGoal = activity.getSharedPreferences("storedGoal", MODE_PRIVATE);
         SharedPreferences.Editor editGoal = storedGoal.edit();

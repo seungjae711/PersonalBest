@@ -25,14 +25,20 @@ import android.widget.Toast;
 import com.example.group12_project.MainActivity;
 import com.example.group12_project.R;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Map;
 
 public class FriendListActivity extends AppCompatActivity {
 
     ListView friendList;
     LocalUser user;
-    Collection<String> friendlist;
+    private Map<String, Object> friendlist;
 
     ArrayList<Friend> friendArrayList;
 
@@ -59,8 +65,16 @@ public class FriendListActivity extends AppCompatActivity {
         //set up back navigation
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //Load list with current friend list
-        for(String s : friendlist){
-            Friend friend = new Friend(s,100,1000);
+        for(String s : friendlist.keySet()){
+            SelfData data = (SelfData)friendlist.get(s);
+            long goal = (long)data.getGoal().get("goal");
+
+            Date date = Calendar.getInstance().getTime();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+            String strDate = dateFormat.format(date);
+
+            long currentStep = (long)data.getDaily_steps().get(strDate);
+            Friend friend = new Friend(s,goal,currentStep);
             friendArrayList.add(friend);
         }
 
@@ -89,7 +103,14 @@ public class FriendListActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         userEmail = String.valueOf(inputFriend.getText());
                         if(user.addFriend(userEmail)){
-                            friendArrayList.add(new Friend(userEmail,1500,15000));
+                            SelfData data = (SelfData) friendlist.get(userEmail);
+                            long goal = (long) (data.getGoal().get("goal"));
+                            Date date = Calendar.getInstance().getTime();
+                            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+                            String strDate = dateFormat.format(date);
+
+                            long currentStep = (long) data.getDaily_steps().get(strDate);
+                            friendArrayList.add(new Friend(userEmail,goal,currentStep));
                         }
                     }
                 })

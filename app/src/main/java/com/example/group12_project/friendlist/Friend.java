@@ -8,10 +8,10 @@ package com.example.group12_project.friendlist;
 public class Friend {
 
     String name;
-    int goal;
+    long goal;
     long currentStep;
 
-    public Friend(String name, int goal, long currentStep) {
+    public Friend(String name, long goal, long currentStep) {
         this.name = name;
         this.goal = goal;
         this.currentStep = currentStep;
@@ -21,7 +21,7 @@ public class Friend {
         return name;
     }
 
-    public int getGoal() {
+    public long getGoal() {
         return goal;
     }
 
@@ -33,7 +33,7 @@ public class Friend {
         this.name = name;
     }
 
-    public void setGoal(int goal) {
+    public void setGoal(long goal) {
         this.goal = goal;
     }
 

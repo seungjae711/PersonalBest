@@ -21,13 +21,15 @@ public class LocalUser implements IUser {
 
     private Collection<String> friendRequests;
 
-    private Collection<String> friendList;
+    private Map<String, Object> friendList;
 
-    private Map<String, Integer> history;
+    private Map<String, Object> history;
 
     public GoalManagement goalManagement;
 
     public FitnessService fitnessService;
+
+    public SelfData selfData;
 
     private String id;
 
@@ -44,7 +46,13 @@ public class LocalUser implements IUser {
         observers = new ArrayList<>();
         history = new HashMap<>();
         friendRequests = new HashSet<>();
-        friendList = new HashSet<>();
+        friendList = new HashMap<>();
+        Map<String, Object> temp = new HashMap<>();
+        temp.put("goal", -1);
+        selfData = new SelfData();
+        selfData.goal = temp;
+        selfData.daily_steps = history;
+        selfData.id = id;
     }
 
     public void register(IUserObserver IUserObserver){
@@ -67,7 +75,7 @@ public class LocalUser implements IUser {
      * @param friendToAdd id of the friend to add
      */
     public void updateFriendListLocal(String friendToAdd){
-        friendList.add(friendToAdd);
+        friendList.put(friendToAdd, new Friend(friendToAdd, -1, -1));
         Log.d(userTAG, "friend added: " + friendToAdd);
         for (IUserObserver observer : this.observers) {
             observer.onLocalFriendChange(friendToAdd);
@@ -75,15 +83,15 @@ public class LocalUser implements IUser {
     }
 
     /**
-     * update local friend list due to cloud change
+     * update local friend list due to cloud change. This should be called by mediator
      * @param newFriends map representing all friends from cloud
      */
     void updateFriendList(Map<String, Object> newFriends) {
-        friendRequests = new HashSet<>(newFriends.keySet());;
+        friendList = newFriends;
     }
 
     /**
-     * update local friend requests and update observers
+     * update local friend requests and update observers. This should be called by mediator
      * @param newRequests newRequests from cloud
      */
     void updateFriendRequests(Map<String, Object> newRequests) {
@@ -120,7 +128,7 @@ public class LocalUser implements IUser {
     public Boolean addFriend(String friendId) {
 
         // check own friend list, if already added, return false
-        if (friendList.contains(friendId)) {
+        if (friendList.containsKey(friendId)) {
             Log.d(userTAG, "trying to add an existing friend " + friendId);
             return false;
         }
@@ -143,20 +151,16 @@ public class LocalUser implements IUser {
      * this method require the requested friend does exist on cloud
      * @param friendID user id of the friend to read his/her data
      */
-    public Map<String, Object> readFriendData(String friendID) {
-        Map<String, Object> friendsData = new HashMap<>();
+    public void readFriendData(String friendID) {
+        Log.d(userTAG, "Requesting to read " + friendID);
         for (IUserObserver observer : this.observers) {
-            friendsData = observer.readFriendData(friendID);
+            observer.readFriendData(friendID);
         }
-        return friendsData;
     }
 
-    public Map<String, Object> readFriendGoal(String friendID) {
-        Map<String, Object> friendsGoal = new HashMap<>();
-        for (IUserObserver observer : this.observers) {
-            friendsGoal = observer.readFriendGoal(friendID);
-        }
-        return friendsGoal;
+    public void changeFriendData(SelfData friendsData) {
+        Log.d(userTAG, "user" + friendsData.id + "data updated");
+        friendList.put(friendsData.id, friendsData);
     }
 
     /**
@@ -173,9 +177,12 @@ public class LocalUser implements IUser {
      */
     public void setGoal(String newGoal) {
         goalManagement.setGoal(newGoal);
+        Map<String, Object> working = new HashMap<>();
+        working.put("goal", Long.parseLong(newGoal));
+        selfData.goal = working;
         Log.d(userTAG, "update new goal to cloud " + newGoal);
         for(IUserObserver observer : this.observers) {
-            observer.onLocalGoalChange(Integer.parseInt(newGoal));
+            observer.onSelfDataChange(selfData);
         }
     }
 
@@ -205,16 +212,14 @@ public class LocalUser implements IUser {
      */
     public void setHistory(String date, int steps) {
         history.put(date, steps);
-        Map<String, Integer> update = new HashMap<>();
-        update.put(date, steps);
         Log.d(userTAG, "add history" + date + steps);
         for (IUserObserver observer : this.observers) {
-            observer.onLocalHistoryChange(update);
+            observer.onSelfDataChange(selfData);
         }
     }
 
 
-    public Collection<String> getFriendList(){
+    public Map<String, Object> getFriendList(){
         return this.friendList;
     }
 

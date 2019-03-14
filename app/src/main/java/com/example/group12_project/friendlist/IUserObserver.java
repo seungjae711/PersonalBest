@@ -8,15 +8,10 @@ public interface IUserObserver {
 
     void onLocalRequestChange(String newRequest);
 
-    void onLocalGoalChange(int goal);
-
     void onLocalHeightChange(int height);
 
-    void onLocalHistoryChange(Map<String, Integer> history);
+    void onSelfDataChange(SelfData selfData);
 
-    Map<String, Object> readFriendData(String friendId);
-
-    Map<String, Object> readFriendGoal(String friendId);
-
+    void readFriendData(String friendId);
 }
 

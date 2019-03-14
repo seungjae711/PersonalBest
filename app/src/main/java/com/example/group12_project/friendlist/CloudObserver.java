@@ -12,6 +12,7 @@ public interface CloudObserver {
 
     void onCloudRequestChange(Map<String, Object> newRequest);
 
+    void onFriendDataChange(SelfData selfData);
 
 }
 

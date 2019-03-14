@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 import com.example.group12_project.fitness.FitnessService;
 import com.example.group12_project.friendlist.FriendListActivity;
@@ -238,7 +239,7 @@ public class MainActivity extends AppCompatActivity
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         String strDate = dateFormat.format(date);
         localUser.setHistory(strDate, 99);
-
+        localUser.readFriendData("user1");
     }
 
     /**

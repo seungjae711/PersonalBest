@@ -27,9 +27,9 @@ public class UserCloud implements ICloud {
     final private String TAG = "UserCloud: ";
     private String GOAL_KEY = "goal";
     private String HEIGHT_KEY = "height";
-    private String DATA_KEY = "data";
     private String FRIENDS_KEY = "accepted";
     private String REQUEST_KEY = "requests";
+    private String SELF_DATA_KEY = "self_data";
 
     /**
      * constructor
@@ -46,30 +46,6 @@ public class UserCloud implements ICloud {
      */
     public void register(CloudObserver cloudObserver) {
         observers.add(cloudObserver);
-    }
-
-    /**
-     * set goal on the cloud
-     * @param goal new goal to store in the cloud
-     */
-    void setGoal(final int goal) {
-        Map<String, Integer> goalMap = new HashMap<>();
-        goalMap.put("number", goal);
-
-        db.collection(userId).document(GOAL_KEY)
-                .set(goalMap)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "new goal successfully written: " + goal);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error setting goal");
-                    }
-                });
     }
 
     /**
@@ -98,21 +74,23 @@ public class UserCloud implements ICloud {
 
     /**
      * merge new daily steps to data base
-     * @param update map contains date and daily steps
+     * @param selfData object of own goal and data
      */
-    void addHistory(Map<String, Integer> update) {
-        db.collection(userId).document(DATA_KEY)
-                .set(update, SetOptions.merge())
+    void addSelfData(SelfData selfData) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("self_data", selfData);
+        db.collection(userId).document(SELF_DATA_KEY)
+                .set(data)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "new daily data written");
+                        Log.d(TAG, "new self data written");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "error written daily data");
+                        Log.w(TAG, "error written self data");
                     }
                 });
     }
@@ -191,9 +169,6 @@ public class UserCloud implements ICloud {
      */
     public void updateRequest() {
         readFromCloud(userId, REQUEST_KEY);
-        for (CloudObserver observer : this.observers) {
-            observer.onCloudRequestChange(this.working);
-        }
     }
 
     /**
@@ -201,9 +176,6 @@ public class UserCloud implements ICloud {
      */
     public void updateFriends() {
         readFromCloud(userId, FRIENDS_KEY);
-        for (CloudObserver oberserver : this.observers) {
-            oberserver.onCloudFriendChange(this.working);
-        }
     }
 
     /**
@@ -211,27 +183,8 @@ public class UserCloud implements ICloud {
      * @param friendId id of the user to read from
      * @return this.working should contain exercise data by now
      */
-    Map<String, Object> readFriendData (String friendId) {
-        readFromCloud(friendId, DATA_KEY);
-        return this.working;
-    }
-
-    /**
-     * read goal from user with passed in id
-     * @param friendId id of the user to read from
-     * @return this.working should contain goal by now
-     */
-    Map<String, Object> readFriendGoal(String friendId) {
-        readFromCloud(friendId, GOAL_KEY);
-        return this.working;
-    }
-
-    /**
-     * helper method for reading from cloud
-     * @param adapter map to get from cloud
-     */
-    private void extractor(Map<String, Object> adapter) {
-        this.working = adapter;
+    public void readFriendData (String friendId) {
+        readFromCloud(friendId, SELF_DATA_KEY);
     }
 
     /**
@@ -246,7 +199,28 @@ public class UserCloud implements ICloud {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
                             Map<String, Object> adapter = documentSnapshot.getData();
-                            extractor(adapter);
+                            switch(document){
+                                case "accepted":
+                                    for(CloudObserver observer : observers){
+                                        observer.onCloudFriendChange(adapter);
+                                    }
+                                    break;
+
+                                case "requests":
+                                    for (CloudObserver observer : observers) {
+                                        observer.onCloudRequestChange(adapter);
+                                    }
+                                    break;
+
+                                case "self_data":
+                                    SelfData data = documentSnapshot.toObject(SelfData.class);
+                                    for (CloudObserver observer : observers) {
+                                        observer.onFriendDataChange(data);
+                                    }
+                                    break;
+                                    default:
+                            }
+                            working = (adapter);
                             Log.d(TAG, "Successfully read " + document);
                         } else {
                             Log.w(TAG, "no " + document + " to read");
@@ -259,5 +233,6 @@ public class UserCloud implements ICloud {
                         Log.w(TAG, "Error getting " + document);
                     }
                 });
+
     }
 }

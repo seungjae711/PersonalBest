@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -44,7 +45,7 @@ public class FriendListActivity extends AppCompatActivity {
 
     private Map<String, Object> friendlist;
 
-    ArrayList<Friend> friendArrayList;
+    ArrayList<SelfData> friendArrayList;
 
     private EditText inputFriend;
 
@@ -59,8 +60,8 @@ public class FriendListActivity extends AppCompatActivity {
 
         friendList = (ListView)findViewById(R.id.friendslist);
 
-        user = new LocalUser("user2"); //TODO ID from sharedpreference
-        cloud = new UserCloud(user.getId());
+        user = LocalUser.getLocalUser();
+        cloud = UserCloud.getUserCloud();
         userCloudMediator = new UserCloudMediator(user, cloud);
         user.register(userCloudMediator);
         cloud.register(userCloudMediator);
@@ -71,7 +72,7 @@ public class FriendListActivity extends AppCompatActivity {
         friendlist= user.getFriendList();
 
 
-        friendArrayList = new ArrayList<Friend>();
+        friendArrayList = new ArrayList<>();
 
         //support for toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.friend_toolbar);
@@ -79,7 +80,7 @@ public class FriendListActivity extends AppCompatActivity {
         //set up back navigation
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //Load list with current friend list
-        for(String s : friendlist.keySet()){
+        for(Object data : friendlist.values()){
 //            SelfData data = (SelfData)friendlist.get(s);
 //            long goal = (long)data.getGoal().get("goal");
 //
@@ -89,8 +90,19 @@ public class FriendListActivity extends AppCompatActivity {
 //
 //            long currentStep = (long)data.getDaily_steps().get(strDate);
 //            Friend friend = new Friend(s,goal,currentStep);
-            Friend friend = (Friend)friendlist.get(s);
-            friendArrayList.add(friend);
+
+            Map dataMap = (Map) data;
+            String id = (String)dataMap.get("id");
+            long goalNum = Long.parseLong((String)dataMap.get("goal"));
+            Map<String, Object> daily_steps = (Map)dataMap.get("daily_steps");
+            Date date = Calendar.getInstance().getTime();
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+            String strDate = dateFormat.format(date);
+            long stepNum = (long)daily_steps.get(strDate);
+
+
+            SelfData friendData = new SelfData(id, goalNum, stepNum);
+            friendArrayList.add(friendData);
         }
 
 
@@ -120,18 +132,19 @@ public class FriendListActivity extends AppCompatActivity {
                         cloud.updateRequest();
 
                         userEmail = String.valueOf(inputFriend.getText());
-                        if(user.addFriend(userEmail)){
+                        user.addFriend(userEmail);
+//                        if(user.addFriend(userEmail)){
 //                            SelfData data = (SelfData) friendlist.get(userEmail);
 //                            long goal = (long) (data.getGoal().get("goal"));
 //                            Date date = Calendar.getInstance().getTime();
 //                            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 //                            String strDate = dateFormat.format(date);
 //
-//                            long currentStep = (long) data.getDaily_steps().get(strDate);
-                            Friend friend = (Friend)friendlist.get(userEmail);
-                            friendArrayList.add(friend);
-//                            friendArrayList.add(new Friend(userEmail,goal,currentStep));
-                        }
+////                            long currentStep = (long) data.getDaily_steps().get(strDate);
+//                            Friend friend = (Friend)friendlist.get(userEmail);
+//                            friendArrayList.add(friend);
+////                            friendArrayList.add(new Friend(userEmail,goal,currentStep));
+//                        }
                     }
                 })
                 .setNegativeButton("Cancel", null)

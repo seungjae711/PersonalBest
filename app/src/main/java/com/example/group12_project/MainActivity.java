@@ -83,6 +83,8 @@ public class MainActivity extends AppCompatActivity
         userCloudMediator = new UserCloudMediator(localUser, userCloud);
         localUser.register(userCloudMediator);
         userCloud.register(userCloudMediator);
+        LocalUser.setLocalUser(localUser);
+        UserCloud.setUserCloud(userCloud);
 
         /* launch bar chart */
 
@@ -160,7 +162,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        /* goal*/
+        /* goal */
 
         SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
 
@@ -169,20 +171,19 @@ public class MainActivity extends AppCompatActivity
             firstLaunch();
         }
 
-        // update height to cloud
+        // update height and goal to cloud
         SharedPreferences height = getSharedPreferences("height", MODE_PRIVATE);
         localUser.setHeight(height.getInt("height", -1));
-
         localUser.setGoalManagement(this);
-
-
         goalString = findViewById(R.id.goal_string);
         goal = findViewById(R.id.goal);
-
-
         localUser.goalManagement.updateGoal(goal);
         SharedPreferences newGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
         localUser.setGoal(newGoal.getString("goal", ""));
+
+        // update local user
+        userCloud.updateRequest();
+        userCloud.updateFriends();
 
         //if user clicks goal they can change to new goal
         goalString.setOnClickListener(new View.OnClickListener() {
@@ -236,8 +237,7 @@ public class MainActivity extends AppCompatActivity
         Date date = Calendar.getInstance().getTime();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         String strDate = dateFormat.format(date);
-        localUser.setHistory(strDate, 99);
-        localUser.readFriendData("user1");
+        localUser.setHistory(strDate, 88);
     }
 
     /**

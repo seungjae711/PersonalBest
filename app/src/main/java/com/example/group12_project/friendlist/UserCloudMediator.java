@@ -1,12 +1,13 @@
 package com.example.group12_project.friendlist;
 
 
+import java.util.Collection;
 import java.util.Map;
 
 public class UserCloudMediator implements CloudObserver, IUserObserver {
 
-    LocalUser localUser;
-    UserCloud cloud;
+    private LocalUser localUser;
+    private UserCloud cloud;
 
     /**
      * Update Cloud
@@ -22,14 +23,14 @@ public class UserCloudMediator implements CloudObserver, IUserObserver {
         cloud.setHeight(height);
     }
 
-    public void onSelfDataChange(SelfData selfData) {
-        cloud.addSelfData(selfData);
+    public void onSelfDataChange(SelfData selfData, Collection<String> friendsIds) {
+        cloud.addSelfData(selfData, friendsIds);
     }
 
 
 
-    public void onLocalFriendChange(String newFriend) {
-        cloud.addFriend(newFriend);
+    public void onLocalFriendChange(String newFriend, Object friendData, Object selfData) {
+        cloud.addFriend(newFriend, friendData, selfData);
     }
 
     public void onLocalRequestChange(String newRequest) {
@@ -49,11 +50,11 @@ public class UserCloudMediator implements CloudObserver, IUserObserver {
     }
 
     public void onCloudFriendChange(Map<String, Object> newFriends) {
-        localUser.updateFriendList(newFriends);
+        localUser.friendListCloudUpdate(newFriends);
     }
 
     public void onCloudRequestChange(Map<String, Object> newRequest) {
-        localUser.updateFriendRequests(newRequest);
+        localUser.friendRequestsCloudUpdate(newRequest);
     }
 
 }

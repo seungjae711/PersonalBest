@@ -142,7 +142,7 @@ public class LocalUser implements IUser {
 
         // add own user id to friend's requests list
         writeRequest(friendId);
-        return true;
+        return false;
     }
 
     /**

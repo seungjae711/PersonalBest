@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -38,6 +39,9 @@ public class FriendListActivity extends AppCompatActivity {
 
     ListView friendList;
     LocalUser user;
+    UserCloud cloud;
+    UserCloudMediator userCloudMediator;
+
     private Map<String, Object> friendlist;
 
     ArrayList<Friend> friendArrayList;
@@ -54,8 +58,18 @@ public class FriendListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_friendlist);
 
         friendList = (ListView)findViewById(R.id.friendslist);
-        user = new LocalUser("user1");
+
+        user = new LocalUser("user2"); //TODO ID from sharedpreference
+        cloud = new UserCloud(user.getId());
+        userCloudMediator = new UserCloudMediator(user, cloud);
+        user.register(userCloudMediator);
+        cloud.register(userCloudMediator);
+
+        cloud.updateRequest();
+        cloud.updateFriends();
+
         friendlist= user.getFriendList();
+
 
         friendArrayList = new ArrayList<Friend>();
 
@@ -66,15 +80,16 @@ public class FriendListActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //Load list with current friend list
         for(String s : friendlist.keySet()){
-            SelfData data = (SelfData)friendlist.get(s);
-            long goal = (long)data.getGoal().get("goal");
-
-            Date date = Calendar.getInstance().getTime();
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-            String strDate = dateFormat.format(date);
-
-            long currentStep = (long)data.getDaily_steps().get(strDate);
-            Friend friend = new Friend(s,goal,currentStep);
+//            SelfData data = (SelfData)friendlist.get(s);
+//            long goal = (long)data.getGoal().get("goal");
+//
+//            Date date = Calendar.getInstance().getTime();
+//            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+//            String strDate = dateFormat.format(date);
+//
+//            long currentStep = (long)data.getDaily_steps().get(strDate);
+//            Friend friend = new Friend(s,goal,currentStep);
+            Friend friend = (Friend)friendlist.get(s);
             friendArrayList.add(friend);
         }
 
@@ -101,16 +116,21 @@ public class FriendListActivity extends AppCompatActivity {
                 .setPositiveButton("add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+
+                        cloud.updateRequest();
+
                         userEmail = String.valueOf(inputFriend.getText());
                         if(user.addFriend(userEmail)){
-                            SelfData data = (SelfData) friendlist.get(userEmail);
-                            long goal = (long) (data.getGoal().get("goal"));
-                            Date date = Calendar.getInstance().getTime();
-                            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-                            String strDate = dateFormat.format(date);
-
-                            long currentStep = (long) data.getDaily_steps().get(strDate);
-                            friendArrayList.add(new Friend(userEmail,goal,currentStep));
+//                            SelfData data = (SelfData) friendlist.get(userEmail);
+//                            long goal = (long) (data.getGoal().get("goal"));
+//                            Date date = Calendar.getInstance().getTime();
+//                            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+//                            String strDate = dateFormat.format(date);
+//
+//                            long currentStep = (long) data.getDaily_steps().get(strDate);
+                            Friend friend = (Friend)friendlist.get(userEmail);
+                            friendArrayList.add(friend);
+//                            friendArrayList.add(new Friend(userEmail,goal,currentStep));
                         }
                     }
                 })

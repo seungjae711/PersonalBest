@@ -181,22 +181,20 @@ public class MainActivity extends AppCompatActivity
 
 
         localUser.goalManagement.updateGoal(goal);
+        SharedPreferences newGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+        localUser.setGoal(newGoal.getString("goal", ""));
 
         //if user clicks goal they can change to new goal
         goalString.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
                 customGoalActivity();
-                SharedPreferences newGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
-                localUser.setGoal(newGoal.getString("goal", ""));
             }
         });
         goal.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v)
             {
                 customGoalActivity();
-                SharedPreferences newGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
-                localUser.setGoal(newGoal.getString("goal", ""));
             }
         });
 
@@ -255,6 +253,8 @@ public class MainActivity extends AppCompatActivity
         //if user updates goal
         if (resultCode == 1) {
             localUser.goalManagement.updateGoal(goal);
+            SharedPreferences newGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
+            localUser.setGoal(newGoal.getString("goal", ""));
             isPaused = false;
         }
         //If authentication was required during google fit setup, this will be called after the user authenticates

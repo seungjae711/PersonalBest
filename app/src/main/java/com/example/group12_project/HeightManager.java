@@ -10,12 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.group12_project.R;
+import com.example.group12_project.friendlist.LocalUser;
 
 public class HeightManager extends AppCompatActivity {
     public Button confirm;
     public EditText heightInput;
-    //public heightManager() { }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +48,7 @@ public class HeightManager extends AppCompatActivity {
         editHeight.putInt("height",height);
         editHeight.apply();
         finish();
+
     }
 
     @Override

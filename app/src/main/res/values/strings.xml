@@ -9,4 +9,5 @@
     <string name="custom">Insert Custom Goal</string>
     <string name="title_activity_friendlist">FriendlistActivity</string>
     <string name="title_activity_add_friend">AddFriend</string>
+    <string name="title_activity_chat">chatActivity</string>
 </resources>

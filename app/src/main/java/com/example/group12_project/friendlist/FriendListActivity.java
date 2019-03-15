@@ -18,13 +18,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.group12_project.MainActivity;
 import com.example.group12_project.R;
+import com.example.group12_project.chat.chatActivity;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -53,12 +57,14 @@ public class FriendListActivity extends AppCompatActivity {
 
     String userEmail;
 
+    String selectedUserId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friendlist);
 
-        friendList = (ListView)findViewById(R.id.friendslist);
+        friendArrayList = new ArrayList<>();
 
         user = LocalUser.getLocalUser();
         cloud = UserCloud.getUserCloud();
@@ -69,10 +75,18 @@ public class FriendListActivity extends AppCompatActivity {
         cloud.updateRequest();
         cloud.updateFriends();
 
-        friendlist= user.getFriendList();
 
 
-        friendArrayList = new ArrayList<>();
+        friendlist = user.getFriendList();
+
+        friendList = (ListView)findViewById(R.id.friendslist);
+
+        FriendListViewAdapter friendListViewAdapter =
+                new FriendListViewAdapter(this, R.layout.friendslist_adapter_layout, friendArrayList);
+        friendList.setAdapter(friendListViewAdapter);
+
+
+
 
         //support for toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.friend_toolbar);
@@ -103,11 +117,22 @@ public class FriendListActivity extends AppCompatActivity {
 
             SelfData friendData = new SelfData(id, goalNum, stepNum);
             friendArrayList.add(friendData);
+
+            friendList.setClickable(true);
+            friendList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    SelfData selectedItem = (SelfData)adapterView.getItemAtPosition(i);
+                    selectedUserId = selectedItem.getId();
+                    Intent passIdIntent = new Intent(view.getContext(), chatActivity.class);
+                    passIdIntent.putExtra("userid", selectedUserId);
+                    startActivityForResult(passIdIntent,0);
+                }
+            });
         }
 
 
-        FriendListViewAdapter friendListViewAdapter = new FriendListViewAdapter(this, R.layout.friendslist_adapter_layout, friendArrayList);
-        friendList.setAdapter(friendListViewAdapter);
+
 
         FloatingActionButton addFriendButton = (FloatingActionButton)findViewById(R.id.add_friend);
         addFriendButton.setOnClickListener(new View.OnClickListener() {

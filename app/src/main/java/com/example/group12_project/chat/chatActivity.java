@@ -91,6 +91,7 @@ public class chatActivity extends AppCompatActivity {
                 .collection(localUser.getId());
 
         initMessageUpdateListener();
+        initOpponentMessageUpdateListener();
         send_button = findViewById(R.id.btn_send);
         send_button.setOnClickListener(view -> sendMessage());
 
@@ -134,6 +135,31 @@ public class chatActivity extends AppCompatActivity {
                 for (DocumentChange documentChange : documentChanges) {
                     QueryDocumentSnapshot document = documentChange.getDocument();
                     sb.append(localUser.getId());
+                    sb.append(":\n");
+                    sb.append(document.get(TEXT_KEY));
+                    sb.append("\n");
+                    sb.append("---\n");
+                };
+
+                TextView chatView = findViewById(R.id.chat);
+                chatView.append(sb.toString());
+            }
+        });
+    }
+
+    private void initOpponentMessageUpdateListener() {
+        opponentChat.addSnapshotListener((newChatSnapShot, error) -> {
+            if (error != null) {
+                Log.e(TAG, error.getLocalizedMessage());
+                return;
+            }
+
+            if (newChatSnapShot != null && !newChatSnapShot.isEmpty()) {
+                StringBuilder sb = new StringBuilder();
+                List<DocumentChange> documentChanges = newChatSnapShot.getDocumentChanges();
+                for (DocumentChange documentChange : documentChanges) {
+                    QueryDocumentSnapshot document = documentChange.getDocument();
+                    sb.append(opponentId);
                     sb.append(":\n");
                     sb.append(document.get(TEXT_KEY));
                     sb.append("\n");

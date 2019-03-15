@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity
     UserCloudMediator userCloudMediator;
 
     //TODO delete mocking user id
-    String userid = "user2";
+    String userid = "user4";
 
 
     @Override

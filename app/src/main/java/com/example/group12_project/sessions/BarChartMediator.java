@@ -1,10 +1,12 @@
-package com.example.group12_project;
+package com.example.group12_project.sessions;
 
 import android.content.Intent;
-import android.os.Parcelable;
 import android.util.Log;
 
-import java.util.ArrayList;
+import com.example.group12_project.IReaderObserver;
+import com.example.group12_project.MainActivity;
+import com.example.group12_project.StepChart;
+import com.example.group12_project.sessions.ISessionObserver;
 
 public class BarChartMediator implements IReaderObserver, ISessionObserver {
 
@@ -13,26 +15,36 @@ public class BarChartMediator implements IReaderObserver, ISessionObserver {
     private int[] sessionSteps;
     private int[] allSteps;
     private MainActivity activity;
+    private String TAG;
 
     public BarChartMediator(MainActivity activity) {
+        TAG = "BarChartMediator";
         this.activity = activity;
     }
 
 
     @Override
     public void sessionUpdate() {
+        Log.i(TAG, "SessionReader finished");
         sesh = true;
-        // if (read) {
-        makeGraph();
-        //  }
+        if (read) {
+            makeGraph();
+        }
+        else {
+            Log.i(TAG, "Waiting for StepReader");
+        }
     }
 
     @Override
     public void readerUpdate() {
+        Log.i(TAG, "StepReader finished");
         read = true;
-        // if (sesh) {
+        if (sesh) {
         makeGraph();
-        //  }
+        }
+        else {
+            Log.i(TAG, "Waiting for sessionReader");
+        }
     }
 
     @Override
@@ -46,6 +58,7 @@ public class BarChartMediator implements IReaderObserver, ISessionObserver {
     }
 
     private void makeGraph() {
+        Log.i(TAG, "Making graph");
         Intent intent = new Intent(activity, StepChart.class);
         intent.putExtra("SessionSteps", sessionSteps);
         intent.putExtra("AllSteps", allSteps);

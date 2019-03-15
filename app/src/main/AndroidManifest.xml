@@ -38,7 +38,7 @@
         <activity android:name=".HeightManager"
             android:label="Height Manager"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".StatsDialog"
+        <activity android:name=".sessions.StatsDialog"
             android:label="Stats Dialog"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

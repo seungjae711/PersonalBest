@@ -1,4 +1,4 @@
-package com.example.group12_project;
+package com.example.group12_project.sessions;
 
 import android.content.Intent;
 import android.content.SharedPreferences;

@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import com.example.group12_project.BarGraph;
+
 
 import java.io.Serializable;
 import java.util.ArrayList;

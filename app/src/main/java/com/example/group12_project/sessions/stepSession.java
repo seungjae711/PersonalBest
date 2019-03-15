@@ -1,4 +1,4 @@
-package com.example.group12_project;
+package com.example.group12_project.sessions;
 
 
 
@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.group12_project.DataReader;
+import com.example.group12_project.MainActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.fitness.Fitness;
@@ -52,7 +54,7 @@ public class stepSession {
     long steps;
     private final int FEET_TO_MILE = 5280;
 
-    stepSession(MainActivity activity){
+    public stepSession(MainActivity activity){
 
         this.activity = activity;
 

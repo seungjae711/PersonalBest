@@ -19,7 +19,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-class BarGraph {
+public class BarGraph {
 
     //Corresponding with calendar's DAY_OF_WEEK field
     //Made first entry empty since there is no 0 value for DAY_OF_WEEK
@@ -35,7 +35,7 @@ class BarGraph {
     private static final String TAG = "[BarGraph]";
 
 
-    BarGraph(Activity activity) {
+    public BarGraph(Activity activity) {
         this.barChart = activity.findViewById(R.id.bargraph);
         SharedPreferences storedGoal
                 = activity.getSharedPreferences("storedGoal", Context.MODE_PRIVATE);
@@ -53,10 +53,14 @@ class BarGraph {
     }
 
     public void createStepBarGraph(int[] seshSteps, int[] allSteps) {
-        this.createStepBarGraph(seshSteps, allSteps, this.goals);
+        Calendar cal = Calendar.getInstance();
+        String today = getDate(cal);
+        cal.add(Calendar.DAY_OF_YEAR, -7);
+        String lastWeek = getDate(cal);
+        this.createStepBarGraph(seshSteps, allSteps, 2000, lastWeek, today);
     }
 
-    public void createStepBarGraph(int[] seshSteps, int[] allSteps, int goal) {
+    public void createStepBarGraph(int[] seshSteps, int[] allSteps, int goal, String start, String end) {
 
 
       //  int size = Math.min(seshSteps.size(), allSteps.size());
@@ -69,13 +73,12 @@ class BarGraph {
 
             Entries = new ArrayList<>();
 
-            int day = startDate.DAY_OF_WEEK;
+            int day = 0;
             for (int i = 0; i < size; i++) {
                 Log.i(TAG, "Session steps: " + seshSteps[i]);
-                Entries.add(new BarEntry(1, seshSteps[i] + 1));
-              //  Entries.add(new BarEntry(1, allSteps.get(i)));
-                day++;
-                day = (day == Calendar.SATURDAY) ? Calendar.SUNDAY : day + 1;
+                Entries.add(new BarEntry(day++, seshSteps[i] + 1000));
+                Entries.add(new BarEntry(day++, allSteps[i] + 3000));
+                day++; //spacing between days
             }
 
 
@@ -105,7 +108,7 @@ class BarGraph {
         BarData barData = new BarData(barDataSet);
         this.barChart.setData(barData);
         this.barChart.setScaleEnabled(true);
-        this.barChart.setDescription("This shows the number of your steps from " + First + " to " + Last);
+        this.barChart.setDescription("This shows the number of your steps from " + start + " to " + end);
         this.barChart.setDescriptionTextSize(9f);
 
 

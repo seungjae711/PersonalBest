@@ -1,10 +1,11 @@
-package com.example.group12_project;
+package com.example.group12_project.sessions;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.example.group12_project.ISubject;
+import com.example.group12_project.MainActivity;
+import com.example.group12_project.sessions.ISessionObserver;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.data.DataSet;
@@ -13,23 +14,18 @@ import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.data.Session;
 import com.google.android.gms.fitness.request.SessionReadRequest;
 import com.google.android.gms.fitness.result.SessionReadResponse;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
-import java.io.Serializable;
-import java.nio.channels.CancelledKeyException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static java.lang.Thread.sleep;
 
-public class SessionReader implements ISubject<ISessionObserver>{
+public class SessionReader implements ISubject<ISessionObserver> {
     private long start, end;
     //private Date startDate, endDate;
     private Calendar startDate, endDate;

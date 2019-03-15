@@ -7,9 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -33,14 +31,13 @@ import java.util.Date;
 import com.example.group12_project.fitness.FitnessService;
 import com.example.group12_project.fitness.FitnessServiceFactory;
 import com.example.group12_project.fitness.GoogleFitAdapter;
-import com.example.group12_project.fitness.SensorSetter;
+import com.example.group12_project.sessions.BarChartMediator;
+import com.example.group12_project.sessions.SessionReader;
+import com.example.group12_project.sessions.StatsDialog;
+import com.example.group12_project.sessions.stepSession;
 import com.example.group12_project.set_goal.CustomGoal;
-import com.example.group12_project.set_goal.GoalDialog;
 import com.example.group12_project.set_goal.GoalManagement;
-import com.google.android.gms.common.Scopes;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.fitness.Fitness;
+import com.example.group12_project.BarGraph;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -59,6 +56,9 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "MainActivity";
     boolean isPaused = false;
     boolean goalReached = false;
+    DataReader reader;
+    SessionReader seshReader;
+    BarChartMediator bcm;
 
     private GoalManagement goalManagement;
 
@@ -237,17 +237,18 @@ public class MainActivity extends AppCompatActivity
         lastWeek.setTime(day);
         lastWeek.add(Calendar.DAY_OF_YEAR, -7);
 
-        BarChartMediator bcm = new BarChartMediator(this);
+        bcm = new BarChartMediator(this);
 
-        SessionReader sesReader = new SessionReader(this);
-        sesReader.setTimeFrame(lastWeek, today);
+        seshReader = new SessionReader(this);
+        seshReader.setTimeFrame(lastWeek, today);
 
-        DataReader reader = new DataReader(this, lastWeek.getTimeInMillis(), today.getTimeInMillis());
+        reader = new DataReader(this, lastWeek.getTimeInMillis(), today.getTimeInMillis());
 
-        sesReader.register(bcm);
-//        reader.register(bcm);
-        sesReader.aggregateSessionSteps();
-        ArrayList<Integer> allSteps = reader.aggregateStepsByDay();
+        seshReader.register(bcm);
+        reader.register(bcm);
+
+        seshReader.aggregateSessionSteps();
+        reader.aggregateStepsByDay(7);
 
 
 

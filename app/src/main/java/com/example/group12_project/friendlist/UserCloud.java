@@ -40,6 +40,12 @@ public class UserCloud implements ICloud {
     }
 
     /**
+     * pass firestore instance
+     */
+    public FirebaseFirestore passInstance(){
+        return this.db;
+    }
+    /**
      * set up user cloud to be static object
      *
      * @param userCloud the only real UserCloud object
@@ -53,7 +59,7 @@ public class UserCloud implements ICloud {
      *
      * @return the real UserCloud object
      */
-    static UserCloud getUserCloud() {
+    public static UserCloud getUserCloud() {
         return cloud;
     }
 

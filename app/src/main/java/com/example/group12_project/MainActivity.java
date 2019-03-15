@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
@@ -24,7 +25,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+
 import com.example.group12_project.fitness.FitnessService;
 import com.example.group12_project.fitness.FitnessServiceFactory;
 import com.example.group12_project.fitness.GoogleFitAdapter;
@@ -40,7 +45,6 @@ import com.google.android.gms.fitness.Fitness;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private GoogleApiClient mGoogleApiClient;
     private TextView timerClock;
     private Button button_start, button_end;
     private TimerKeeper time;
@@ -146,7 +150,6 @@ public class MainActivity extends AppCompatActivity
         /*GOAL SETTING*/
         SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
         SharedPreferences.Editor editor = storedGoal.edit();
-  //      spEditor.putInt("height",66);
 
         //set first goal during first login
         if(storedGoal.getBoolean("firstStart",true)){
@@ -227,8 +230,37 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void launchBarChart() {
-        Intent intent = new Intent(this, StepChart.class);
-        startActivity(intent);
+        final Calendar today = Calendar.getInstance();
+        final Calendar lastWeek = Calendar.getInstance();
+        Date day = new Date();
+        today.setTime(day);
+        lastWeek.setTime(day);
+        lastWeek.add(Calendar.DAY_OF_YEAR, -7);
+
+        BarChartMediator bcm = new BarChartMediator(this);
+
+        SessionReader sesReader = new SessionReader(this);
+        sesReader.setTimeFrame(lastWeek, today);
+
+        DataReader reader = new DataReader(this, lastWeek.getTimeInMillis(), today.getTimeInMillis());
+
+        sesReader.register(bcm);
+//        reader.register(bcm);
+        sesReader.aggregateSessionSteps();
+        ArrayList<Integer> allSteps = reader.aggregateStepsByDay();
+
+
+
+
+      /* Intent intent = new Intent(this, StepChart.class);
+        if (sesReader == null) {
+            Log.e(TAG, "sessionReader is null");
+        }
+        intent.putExtra("SessionReader", (Parcelable)sesReader);
+        intent.putExtra("StepReader", reader);
+
+
+        startActivity(intent); */
     }
 
     private void statsLaunch(double speed, long steps, long time) {

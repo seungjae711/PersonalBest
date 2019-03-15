@@ -21,12 +21,19 @@ import java.util.Locale;
 
 class BarGraph {
 
+    //Corresponding with calendar's DAY_OF_WEEK field
+    //Made first entry empty since there is no 0 value for DAY_OF_WEEK
+    private String[] days = {"", "Sunday", "Monday", "Tuesday",
+            "Wednesday", "Thursday", "Friday", "Saturday"};
+
     private BarChart barChart;
     private ArrayList<BarEntry> Entries;
-    private String First= "2016/05/05", Last= "2016/05/13";
-    private int[] a ={2000,1500,4545,3000,3450,4470,2473};
+    private Calendar startDate, endDate;
+    private String First = "2016/05/05", Last = "2016/05/13";
+    private int[] a = {2000, 1500, 4545, 3000, 3450, 4470, 2473};
     private int goals;
     private static final String TAG = "[BarGraph]";
+
 
     BarGraph(Activity activity) {
         this.barChart = activity.findViewById(R.id.bargraph);
@@ -34,7 +41,7 @@ class BarGraph {
                 = activity.getSharedPreferences("storedGoal", Context.MODE_PRIVATE);
 
         // check if goal is null
-        String goalValue = storedGoal.getString("goal","");
+        String goalValue = storedGoal.getString("goal", "");
         if (goalValue != null) {
             goals = Integer.parseInt(goalValue);
             Log.i(TAG, String.format("Goals got from shared preferences is %s", goals));
@@ -42,10 +49,69 @@ class BarGraph {
             Log.i(TAG, "Can't access goals");
             activity.finish();
         }
-        createRandomBarGraph(First, Last, goals, a);
+       // createRandomBarGraph(First, Last, goals, a);
     }
 
-    private void createRandomBarGraph(String Date1, String Date2, int goal, int[] steps){
+    public void createStepBarGraph(int[] seshSteps, int[] allSteps) {
+        this.createStepBarGraph(seshSteps, allSteps, this.goals);
+    }
+
+    public void createStepBarGraph(int[] seshSteps, int[] allSteps, int goal) {
+
+
+      //  int size = Math.min(seshSteps.size(), allSteps.size());
+        int size = seshSteps.length;
+        Log.i(TAG, "Number of session bars: " + size);
+
+        try {
+            ArrayList<String> dates = new ArrayList<>();
+       //     dates = getList(startDate, endDate);
+
+            Entries = new ArrayList<>();
+
+            int day = startDate.DAY_OF_WEEK;
+            for (int i = 0; i < size; i++) {
+                Log.i(TAG, "Session steps: " + seshSteps[i]);
+                Entries.add(new BarEntry(1, seshSteps[i] + 1));
+              //  Entries.add(new BarEntry(1, allSteps.get(i)));
+                day++;
+                day = (day == Calendar.SATURDAY) ? Calendar.SUNDAY : day + 1;
+            }
+
+
+        } catch (Exception e) {
+            Log.e(TAG, "Exception: ", e);
+            e.printStackTrace();
+        }
+
+        if (Entries == null) {
+            Log.e(TAG, "Entries was null!");
+            return;
+        }
+
+        LimitLine upper_limit = new LimitLine(goal, "Your Goal!");
+        upper_limit.setLineWidth(5f);
+        upper_limit.enableDashedLine(10f, 10f, 0f);
+        upper_limit.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+        upper_limit.setTextSize(13f);
+        upper_limit.setTextColor(android.graphics.Color.parseColor("#D81B60"));
+        YAxis leftAxis = this.barChart.getAxisLeft();
+        leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
+        leftAxis.addLimitLine(upper_limit);
+
+        BarDataSet barDataSet = new BarDataSet(Entries, "Steps");
+
+        barDataSet.setColor(android.graphics.Color.parseColor("#008577"));
+        BarData barData = new BarData(barDataSet);
+        this.barChart.setData(barData);
+        this.barChart.setScaleEnabled(true);
+        this.barChart.setDescription("This shows the number of your steps from " + First + " to " + Last);
+        this.barChart.setDescriptionTextSize(9f);
+
+
+    }
+
+    private void createRandomBarGraph(String Date1, String Date2, int goal, int[] steps) {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.US);
 
@@ -63,7 +129,7 @@ class BarGraph {
             mDate2.setTime(date2);
 
             ArrayList<String> dates = new ArrayList<>();
-            dates = getList(mDate1,mDate2);
+            dates = getList(mDate1, mDate2);
 
             Entries = new ArrayList<>();
 
@@ -75,16 +141,16 @@ class BarGraph {
             //random = new Random();
             int day = 1;
 
-            for(int j : steps) {
+            for (int j : steps) {
                 //max = 3000f;
                 //min = 3000f;
                 //value = random.nextFloat()*max + min;
-                BarEntry Bar = new BarEntry(day, j);
+                BarEntry Bar = new BarEntry(1, j);
                 Entries.add(Bar);
                 day++;
             }
 
-        }catch(ParseException e){
+        } catch (ParseException e) {
             e.printStackTrace();
         }
 
@@ -99,33 +165,33 @@ class BarGraph {
         leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
         leftAxis.addLimitLine(upper_limit);
 
-        BarDataSet barDataSet = new BarDataSet(Entries,"Steps");
+        BarDataSet barDataSet = new BarDataSet(Entries, "Steps");
 
         barDataSet.setColor(android.graphics.Color.parseColor("#008577"));
         BarData barData = new BarData(barDataSet);
         this.barChart.setData(barData);
         this.barChart.setScaleEnabled(true);
-        this.barChart.setDescription("This shows the number of your steps from " + First + " to " + Last );
+        this.barChart.setDescription("This shows the number of your steps from " + First + " to " + Last);
         this.barChart.setDescriptionTextSize(9f);
     }
 
 
-    private ArrayList<String> getList(Calendar startDate, Calendar endDate){
+    private ArrayList<String> getList(Calendar startDate, Calendar endDate) {
         ArrayList<String> list = new ArrayList<String>();
-        while(startDate.compareTo(endDate)<=0){
+        while (startDate.compareTo(endDate) <= 0) {
             list.add(getDate(startDate));
-            startDate.add(Calendar.DAY_OF_MONTH,1);
+            startDate.add(Calendar.DAY_OF_MONTH, 1);
         }
         return list;
     }
 
-    private String getDate(Calendar cld){
+    private String getDate(Calendar cld) {
         String curDate = cld.get(Calendar.YEAR) + "/" + (cld.get(Calendar.MONTH) + 1) + "/"
-                +cld.get(Calendar.DAY_OF_MONTH);
-        try{
+                + cld.get(Calendar.DAY_OF_MONTH);
+        try {
             Date date = new SimpleDateFormat("yyyy/MM/dd", Locale.US).parse(curDate);
-            curDate =  new SimpleDateFormat("yyy/MM/dd", Locale.US).format(date);
-        }catch(ParseException e){
+            curDate = new SimpleDateFormat("yyy/MM/dd", Locale.US).format(date);
+        } catch (ParseException e) {
             e.printStackTrace();
         }
         return curDate;

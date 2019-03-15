@@ -100,6 +100,7 @@ public class LocalUser extends Application implements IUser {
      */
     void friendListCloudUpdate(Map<String, Object> newFriends) {
         friendList = newFriends;
+        Log.d(userTAG, "friend list updated");
     }
 
     /**

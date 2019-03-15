@@ -95,15 +95,6 @@ public class FriendListActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //Load list with current friend list
         for(Object data : friendlist.values()){
-//            SelfData data = (SelfData)friendlist.get(s);
-//            long goal = (long)data.getGoal().get("goal");
-//
-//            Date date = Calendar.getInstance().getTime();
-//            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-//            String strDate = dateFormat.format(date);
-//
-//            long currentStep = (long)data.getDaily_steps().get(strDate);
-//            Friend friend = new Friend(s,goal,currentStep);
 
             Map dataMap = (Map) data;
             String id = (String)dataMap.get("id");
@@ -112,7 +103,11 @@ public class FriendListActivity extends AppCompatActivity {
             Date date = Calendar.getInstance().getTime();
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
             String strDate = dateFormat.format(date);
-            long stepNum = (long)daily_steps.get(strDate);
+            long stepNum = 0;
+            if (daily_steps.containsKey(strDate)) {
+                stepNum = (long) daily_steps.get(strDate);
+            }
+
 
 
             SelfData friendData = new SelfData(id, goalNum, stepNum);
@@ -153,23 +148,9 @@ public class FriendListActivity extends AppCompatActivity {
                 .setPositiveButton("add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
                         cloud.updateRequest();
-
                         userEmail = String.valueOf(inputFriend.getText());
                         user.addFriend(userEmail);
-//                        if(user.addFriend(userEmail)){
-//                            SelfData data = (SelfData) friendlist.get(userEmail);
-//                            long goal = (long) (data.getGoal().get("goal"));
-//                            Date date = Calendar.getInstance().getTime();
-//                            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-//                            String strDate = dateFormat.format(date);
-//
-////                            long currentStep = (long) data.getDaily_steps().get(strDate);
-//                            Friend friend = (Friend)friendlist.get(userEmail);
-//                            friendArrayList.add(friend);
-////                            friendArrayList.add(new Friend(userEmail,goal,currentStep));
-//                        }
                     }
                 })
                 .setNegativeButton("Cancel", null)

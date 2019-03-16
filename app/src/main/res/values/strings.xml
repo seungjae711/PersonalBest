@@ -10,4 +10,7 @@
     <string name="title_activity_friendlist">FriendlistActivity</string>
     <string name="title_activity_add_friend">AddFriend</string>
     <string name="title_activity_chat">chatActivity</string>
+    <string name="channel_name">MainChannel</string>
+    <string name="channel_description">App main channel</string>
+    <string name="channel_id">com.example.group12_project</string>
 </resources>

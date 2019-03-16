@@ -35,6 +35,10 @@ import com.example.group12_project.friendlist.FriendListActivity;
 import com.example.group12_project.friendlist.LocalUser;
 import com.example.group12_project.friendlist.UserCloud;
 import com.example.group12_project.friendlist.UserCloudMediator;
+import com.example.group12_project.sessions.BarChartMediator;
+import com.example.group12_project.sessions.SessionReader;
+import com.example.group12_project.sessions.StatsDialog;
+import com.example.group12_project.sessions.stepSession;
 import com.example.group12_project.set_goal.CustomGoal;
 import com.google.firebase.FirebaseApp;
 
@@ -54,6 +58,9 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = "MainActivity";
     boolean isPaused = false;
     boolean goalReached = false;
+    DataReader reader;
+    SessionReader seshReader;
+    BarChartMediator bcm;
 
     Calendar cal;
     EditText timeEntered;
@@ -143,7 +150,7 @@ public class MainActivity extends AppCompatActivity
                 button_start.setVisibility(View.VISIBLE);
                 button_end.setVisibility(View.INVISIBLE);
                 timerClock.setText("Time Your Steps!");
-                statsLaunch(stepSesh.calculateSessionSpeed() , stepSesh.getSessionSteps(),stepSesh.getTotalTime());
+                statsLaunch(stepSesh);
                 //Toast.makeText(MainActivity.this, Long.toString(ellapsedTimer), Toast.LENGTH_LONG).show();
                 if(ellapsedTimer > 200000000) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
@@ -173,7 +180,7 @@ public class MainActivity extends AppCompatActivity
         // update height and goal to cloud
         SharedPreferences height = getSharedPreferences("height", MODE_PRIVATE);
         localUser.setHeight(height.getInt("height", -1));
-        localUser.setGoalManagement(this);
+        localUser.setGoalManagement(this, getApplicationContext());
         goalString = findViewById(R.id.goal_string);
         goal = findViewById(R.id.goal);
         localUser.goalManagement.updateGoal(goal);
@@ -270,26 +277,46 @@ public class MainActivity extends AppCompatActivity
      * show recent work out history via barchart
      */
     private void launchBarChart() {
-        Intent intent = new Intent(this, StepChart.class);
-        startActivity(intent);
+//        Intent intent = new Intent(this, StepChart.class);
+//        startActivity(intent);
+        final Calendar today = Calendar.getInstance();
+        final Calendar lastWeek = Calendar.getInstance();
+        Date day = new Date();
+        today.setTime(day);
+        lastWeek.setTime(day);
+        lastWeek.add(Calendar.DAY_OF_YEAR, -7);
+
+        bcm = new BarChartMediator(this);
+
+        seshReader = new SessionReader(this);
+        seshReader.setTimeFrame(lastWeek, today);
+
+        reader = new DataReader(this, lastWeek.getTimeInMillis(), today.getTimeInMillis());
+
+        seshReader.register(bcm);
+        reader.register(bcm);
+
+        seshReader.aggregateSessionSteps();
+        reader.aggregateStepsByDay(7);
     }
 
-    private void statsLaunch(double speed, long steps, long time) {
-        SharedPreferences.Editor statsEdit = getSharedPreferences("stats", MODE_PRIVATE).edit();
+    private void statsLaunch(stepSession stepSesh) {
+       /* SharedPreferences.Editor statsEdit = getSharedPreferences("stats", MODE_PRIVATE).edit();
         statsEdit.putLong("speed", (long)speed);
         statsEdit.putLong("steps", steps);
         statsEdit.putLong("time", time);
         statsEdit.apply();
 
         Intent intent = new Intent(this, StatsDialog.class);
-        startActivity(intent);
+        startActivity(intent); */
+       stepSesh.launchDialog(stepSesh);
     }
 
     private void firstLaunch() {
         SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
         SharedPreferences.Editor edit = storedGoal.edit();
         edit.putString("goal", "5");
-        localUser.setGoalManagement(this);
+        localUser.setGoalManagement(this, getApplicationContext());
         localUser.setGoal("5");
         userCloud.setUserId(localUser.getId());
         edit.putBoolean("firstStart", false);
@@ -322,7 +349,8 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onProgressUpdate(Integer... progress) {
             Log.i(TAG, "Checking Goal");
-            if(!localUser.goalManagement.checkIfGoalReached(isPaused)){
+            isPaused = localUser.goalManagement.checkIfGoalReached(isPaused);
+            if(!isPaused){
                 localUser.goalManagement.checkIfHalfGoal();
             }
         }

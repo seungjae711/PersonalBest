@@ -2,6 +2,7 @@ package com.example.group12_project.friendlist;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import com.example.group12_project.MainActivity;
@@ -193,6 +194,10 @@ public class LocalUser extends Application implements IUser {
      */
     public void setGoalManagement(Activity activity) {
         goalManagement = new GoalManagement(activity);
+    }
+
+    public void setGoalManagement(Activity activity, Context context) {
+        goalManagement = new GoalManagement(activity, context);
     }
 
     /**

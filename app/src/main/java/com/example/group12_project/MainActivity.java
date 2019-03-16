@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity
     UserCloudMediator userCloudMediator;
 
     //TODO delete mocking user id
-    String userid = "user2";
+    String userid = "user7";
 
 
     @Override
@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity
         userCloud = new UserCloud(localUser.getId());
         userCloudMediator = new UserCloudMediator(localUser, userCloud);
         localUser.register(userCloudMediator);
+        localUser.setGoalManagement(this);
         userCloud.register(userCloudMediator);
         LocalUser.setLocalUser(localUser);
         UserCloud.setUserCloud(userCloud);

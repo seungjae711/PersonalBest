@@ -59,6 +59,7 @@ public class FriendListActivity extends AppCompatActivity {
 
     String selectedUserId;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,16 +77,15 @@ public class FriendListActivity extends AppCompatActivity {
         cloud.updateFriends();
 
 
-
         friendlist = user.getFriendList();
 
         friendList = (ListView)findViewById(R.id.friendslist);
 
+
+
         FriendListViewAdapter friendListViewAdapter =
                 new FriendListViewAdapter(this, R.layout.friendslist_adapter_layout, friendArrayList);
         friendList.setAdapter(friendListViewAdapter);
-
-
 
 
         //support for toolbar
@@ -114,6 +114,7 @@ public class FriendListActivity extends AppCompatActivity {
             friendArrayList.add(friendData);
 
             friendList.setClickable(true);
+
             friendList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -124,6 +125,7 @@ public class FriendListActivity extends AppCompatActivity {
                     startActivityForResult(passIdIntent,0);
                 }
             });
+
         }
 
 

@@ -57,7 +57,7 @@ public class BarGraph {
         String today = getDate(cal);
         cal.add(Calendar.DAY_OF_YEAR, -7);
         String lastWeek = getDate(cal);
-        this.createStepBarGraph(seshSteps, allSteps, 7000, lastWeek, today);
+        this.createStepBarGraph(seshSteps, allSteps, goals, lastWeek, today);
     }
 
     public void createStepBarGraph(int[] seshSteps, int[] allSteps, int goal, String start, String end) {
@@ -82,10 +82,10 @@ public class BarGraph {
             for (int i = 0; i < size; i++) {
                 Log.i(TAG, "Session steps: " + seshSteps[i]);
                 //When ready for testing just delete the steps added to the array values
-                Entries.add(new BarEntry(day++, seshSteps[i] + 1000));
-                Entries.add(new BarEntry(day++, allSteps[i] + 5000));
+                Entries.add(new BarEntry(day++, seshSteps[i] ));
+                Entries.add(new BarEntry(day++, allSteps[i] ));
                 day++; //spacing between days
-                max = Math.max( max, Math.max(seshSteps[i] +1000 , allSteps[i] + 5000) );
+                max = Math.max( max, Math.max(seshSteps[i] , allSteps[i]) );
             }
 
 

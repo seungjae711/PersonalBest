@@ -236,6 +236,12 @@ public class stepSession {
             public void onSuccess(DataReadResponse dataReadResponse) {
                 long stepSum = 0;
                 List<DataSet> dataSets = dataReadResponse.getDataSets();
+                if (dataSets == null) {
+                    Log.e(TAG, "error, null data");
+                }
+                else {
+                    Log.i(TAG, "data size: " + dataSets.size());
+                }
                 for (DataSet data : dataSets) {
                     Log.d(TAG, data.toString());
                     stepSum = stepSum + (data.isEmpty() ? 0 :
@@ -243,6 +249,7 @@ public class stepSession {
                 }
 
                 steps = stepSum;
+                Log.i(TAG, "Session steps: " + steps);
                 SharedPreferences.Editor statsEdit = activity.getSharedPreferences("stats", MODE_PRIVATE).edit();
                 statsEdit.putFloat("speed", (float) calculateSessionSpeed());
                 statsEdit.putLong("steps", getSessionSteps());

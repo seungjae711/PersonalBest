@@ -111,7 +111,7 @@ public class GoogleFitAdapter implements FitnessService {
                 });
 
         Fitness.getRecordingClient(activity, lastSignedInAccount)
-                .subscribe(DataType.TYPE_STEP_COUNT_DELTA)
+                .subscribe(DataType.TYPE_STEP_COUNT_CUMULATIVE)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -209,7 +209,7 @@ public class GoogleFitAdapter implements FitnessService {
 
     // get the update of daily step count
     public void update_daily_steps() {
-        dataReader();
+       // dataReader();
         GoogleSignInAccount lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(activity);
 
         // check if already signed in

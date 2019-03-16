@@ -130,8 +130,8 @@ public class DataReader implements ISubject<IReaderObserver> {
         }
 
         this.readRequest = new DataReadRequest.Builder()
-                .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
-                .bucketByTime(1, TimeUnit.DAYS)
+                .read(DataType.AGGREGATE_STEP_COUNT_DELTA)
+                //.bucketByTime(1, TimeUnit.DAYS)
                 .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
                 .build();
 
@@ -218,8 +218,8 @@ public class DataReader implements ISubject<IReaderObserver> {
             return null;
         }
         this.readRequest = new DataReadRequest.Builder()
-                .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
-                .bucketByTime(1, TimeUnit.DAYS)
+                .read(DataType.AGGREGATE_STEP_COUNT_DELTA)
+            //    .bucketByTime(1, TimeUnit.DAYS)
                 .setTimeRange(start, end, TimeUnit.MILLISECONDS)
                 .build();
 

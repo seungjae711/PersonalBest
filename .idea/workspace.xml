@@ -8,14 +8,23 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="goal" />
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="range" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="de946db3-7c77-49da-b3a5-0c4d543d03aa" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/friendlist/LocalUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/friendlist/LocalUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/set_goal/GoalManagement.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/set_goal/GoalManagement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/taskHistory/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/taskHistory/taskHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/taskHistory/taskHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/taskHistory/taskHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/BarGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/BarGraph.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/DataReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/DataReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/fitness/GoogleFitAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/fitness/GoogleFitAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/sessions/stepSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/sessions/stepSession.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -77,29 +86,29 @@
     <session id="916697405">
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="4307" />
-          <entry key="txt" value="277" />
+          <entry key="java" value="4504" />
+          <entry key="txt" value="310" />
           <entry key="xml" value="21" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="4307" />
-          <entry key="PLAIN_TEXT" value="277" />
+          <entry key="JAVA" value="4504" />
+          <entry key="PLAIN_TEXT" value="310" />
           <entry key="XML" value="21" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="gradle" value="1" />
-          <entry key="java" value="45" />
+          <entry key="java" value="47" />
           <entry key="xml" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="Groovy" value="1" />
-          <entry key="JAVA" value="45" />
+          <entry key="JAVA" value="47" />
           <entry key="XML" value="4" />
         </counts>
       </usages-collector>
@@ -134,17 +143,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/fitness/GoogleFitAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="245">
-              <caret line="219" column="27" selection-start-line="219" selection-start-column="27" selection-end-line="219" selection-end-column="27" />
+            <state relative-caret-position="-1922">
+              <caret line="68" column="92" selection-start-line="68" selection-start-column="92" selection-end-line="68" selection-end-column="92" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/DataReader.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2026">
-              <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
+            <state relative-caret-position="108">
+              <caret line="133" column="18" selection-start-line="133" selection-start-column="18" selection-end-line="133" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -152,17 +161,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="178">
-              <caret line="182" column="35" selection-start-line="182" selection-start-column="21" selection-end-line="182" selection-end-column="35" />
+            <state relative-caret-position="1515">
+              <caret line="371" column="23" selection-start-line="371" selection-start-column="16" selection-end-line="371" selection-end-column="23" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/set_goal/GoalManagement.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="343">
-              <caret line="116" lean-forward="true" selection-start-line="116" selection-end-line="116" />
+              <caret line="116" selection-start-line="116" selection-end-line="116" />
               <folding>
                 <element signature="e#1037#1038#0" expanded="true" />
                 <element signature="e#1067#1068#0" expanded="true" />
@@ -195,10 +204,32 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/NotificationBuilder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
+            <state relative-caret-position="-377">
               <caret line="6" column="30" selection-start-line="6" selection-start-column="23" selection-end-line="6" selection-end-column="30" />
               <folding>
                 <element signature="e#665#708#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/BarGraph.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-427">
+              <caret line="59" column="58" selection-start-line="59" selection-start-column="58" selection-end-line="59" selection-end-column="58" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/sessions/stepSession.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="313">
+              <caret line="237" column="57" selection-start-line="237" selection-start-column="57" selection-end-line="237" selection-end-column="57" />
+              <folding>
+                <element signature="e#10295#10296#0" expanded="true" />
+                <element signature="e#10365#10366#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -208,7 +239,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>TAG</find>
       <find>localUser.getId()</find>
       <find>toast</find>
       <find>firebase</find>
@@ -236,8 +266,9 @@
       <find>minSteps</find>
       <find>setG</find>
       <find>GoalManagement</find>
-      <find>numSteps</find>
       <find>notification</find>
+      <find>numSteps</find>
+      <find>storeda</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -265,14 +296,16 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/HeightManager.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/friendlist/UserCloud.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/HeightEmailManager.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/BarGraph.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/NotificationBuilder.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/fitness/GoogleFitAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/set_goal/GoalDialog.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/set_goal/CustomGoal.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/friendlist/LocalUser.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/set_goal/GoalManagement.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/BarGraph.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/sessions/stepSession.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/fitness/GoogleFitAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/group12_project/DataReader.java" />
       </list>
     </option>
   </component>
@@ -507,7 +540,14 @@
       <option name="project" value="LOCAL" />
       <updated>1552712709012</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="notification for goal reached">
+      <created>1552713230703</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1552713230703</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TodoView">
@@ -524,21 +564,22 @@
     <layout>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
       <window_info id="Capture Tool" order="1" />
-      <window_info active="true" content_ui="combo" id="Project" order="2" sideWeight="0.6865497" visible="true" weight="0.16361417" />
+      <window_info content_ui="combo" id="Project" order="2" sideWeight="0.6865497" visible="true" weight="0.16361417" />
       <window_info id="Structure" order="3" sideWeight="0.3134503" side_tool="true" weight="0.24920635" />
       <window_info id="Build Variants" order="4" side_tool="true" />
       <window_info id="Image Layers" order="5" />
       <window_info id="Designer" order="6" />
       <window_info id="Favorites" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Messages" weight="0.32982457" />
       <window_info anchor="bottom" id="Logcat" order="0" sideWeight="0.49906892" weight="0.32982457" />
       <window_info anchor="bottom" id="TODO" order="1" weight="0.32982457" />
       <window_info anchor="bottom" id="Android Profiler" order="2" weight="0.32982457" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.53724056" weight="0.32046783" />
-      <window_info anchor="bottom" id="Run" order="4" sideWeight="0.498779" weight="0.36023393" />
+      <window_info active="true" anchor="bottom" id="Run" order="4" sideWeight="0.498779" visible="true" weight="0.36023393" />
       <window_info anchor="bottom" id="Event Log" order="5" sideWeight="0.46275946" side_tool="true" weight="0.32046783" />
       <window_info anchor="bottom" id="Version Control" order="6" weight="0.32982457" />
       <window_info anchor="bottom" id="Build" order="7" sideWeight="0.4981685" weight="0.32982457" />
-      <window_info anchor="bottom" id="Find" order="8" visible="true" weight="0.2877193" />
+      <window_info anchor="bottom" id="Find" order="8" weight="0.2877193" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.32982457" />
       <window_info anchor="right" id="Device File Explorer" order="0" side_tool="true" />
       <window_info anchor="right" id="Capture Analysis" order="1" />
@@ -611,7 +652,8 @@
     <MESSAGE value="friend list date not exist bug fixed" />
     <MESSAGE value="username enabled" />
     <MESSAGE value="something" />
-    <option name="LAST_COMMIT_MESSAGE" value="something" />
+    <MESSAGE value="notification for goal reached" />
+    <option name="LAST_COMMIT_MESSAGE" value="notification for goal reached" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -831,38 +873,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/BarGraph.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="67" column="38" selection-start-line="67" selection-start-column="38" selection-end-line="67" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/sessions/stepSession.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1655">
-          <caret line="41" column="13" selection-start-line="41" selection-start-column="13" selection-end-line="41" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/sessions/BarChartMediator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-385">
           <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/fitness/GoogleFitAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="245">
-          <caret line="219" column="27" selection-start-line="219" selection-start-column="27" selection-end-line="219" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/DataReader.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2026">
-          <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -914,23 +928,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="178">
-          <caret line="182" column="35" selection-start-line="182" selection-start-column="21" selection-end-line="182" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/NotificationBuilder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="30" selection-start-line="6" selection-start-column="23" selection-end-line="6" selection-end-column="30" />
-          <folding>
-            <element signature="e#665#708#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/chat/chatActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="231">
@@ -941,13 +938,62 @@
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/set_goal/GoalManagement.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="343">
-          <caret line="116" lean-forward="true" selection-start-line="116" selection-end-line="116" />
+          <caret line="116" selection-start-line="116" selection-end-line="116" />
           <folding>
             <element signature="e#1037#1038#0" expanded="true" />
             <element signature="e#1067#1068#0" expanded="true" />
             <element signature="e#2708#2709#0" expanded="true" />
             <element signature="e#2763#2764#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/NotificationBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-377">
+          <caret line="6" column="30" selection-start-line="6" selection-start-column="23" selection-end-line="6" selection-end-column="30" />
+          <folding>
+            <element signature="e#665#708#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/fitness/GoogleFitAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1922">
+          <caret line="68" column="92" selection-start-line="68" selection-start-column="92" selection-end-line="68" selection-end-column="92" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/sessions/stepSession.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="313">
+          <caret line="237" column="57" selection-start-line="237" selection-start-column="57" selection-end-line="237" selection-end-column="57" />
+          <folding>
+            <element signature="e#10295#10296#0" expanded="true" />
+            <element signature="e#10365#10366#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/BarGraph.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-427">
+          <caret line="59" column="58" selection-start-line="59" selection-start-column="58" selection-end-line="59" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1515">
+          <caret line="371" column="23" selection-start-line="371" selection-start-column="16" selection-end-line="371" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/group12_project/DataReader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="133" column="18" selection-start-line="133" selection-start-column="18" selection-end-line="133" selection-end-column="18" />
         </state>
       </provider>
     </entry>

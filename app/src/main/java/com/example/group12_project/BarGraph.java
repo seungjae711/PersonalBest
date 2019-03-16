@@ -57,7 +57,7 @@ public class BarGraph {
         String today = getDate(cal);
         cal.add(Calendar.DAY_OF_YEAR, -7);
         String lastWeek = getDate(cal);
-        this.createStepBarGraph(seshSteps, allSteps, 2000, lastWeek, today);
+        this.createStepBarGraph(seshSteps, allSteps, 7000, lastWeek, today);
     }
 
     public void createStepBarGraph(int[] seshSteps, int[] allSteps, int goal, String start, String end) {
@@ -66,6 +66,7 @@ public class BarGraph {
       //  int size = Math.min(seshSteps.size(), allSteps.size());
         int size = seshSteps.length;
         Log.i(TAG, "Number of session bars: " + size);
+        int max = 0;
 
         try {
             ArrayList<String> dates = new ArrayList<>();
@@ -76,9 +77,11 @@ public class BarGraph {
             int day = 0;
             for (int i = 0; i < size; i++) {
                 Log.i(TAG, "Session steps: " + seshSteps[i]);
+                //When ready for testing just delete the steps added to the array values
                 Entries.add(new BarEntry(day++, seshSteps[i] + 1000));
-                Entries.add(new BarEntry(day++, allSteps[i] + 3000));
+                Entries.add(new BarEntry(day++, allSteps[i] + 5000));
                 day++; //spacing between days
+                max = Math.max( max, Math.max(seshSteps[i] +1000 , allSteps[i] + 5000) );
             }
 
 
@@ -91,6 +94,7 @@ public class BarGraph {
             Log.e(TAG, "Entries was null!");
             return;
         }
+        max = Math.max(max, goal);
 
         LimitLine upper_limit = new LimitLine(goal, "Your Goal!");
         upper_limit.setLineWidth(5f);
@@ -108,7 +112,9 @@ public class BarGraph {
         BarData barData = new BarData(barDataSet);
         this.barChart.setData(barData);
         this.barChart.setScaleEnabled(true);
-        this.barChart.setDescription("This shows the number of your steps from " + start + " to " + end);
+        this.barChart.setFitBars(true);
+        this.barChart.setVisibleYRange(1, max + 1000, YAxis.AxisDependency.RIGHT);
+        this.barChart.setDescription("This shows the number of your steps(session-total) from " + start + " to " + end);
         this.barChart.setDescriptionTextSize(9f);
 
 

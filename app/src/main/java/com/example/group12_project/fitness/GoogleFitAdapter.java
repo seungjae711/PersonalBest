@@ -40,6 +40,8 @@ public class GoogleFitAdapter implements FitnessService {
     private final int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE
             = System.identityHashCode(this) & 0xFFFF;
 
+    private DataReader dailyReader;
+
     // for logging
     private final String TAG = "GoogleFitAdapter";
 
@@ -48,7 +50,10 @@ public class GoogleFitAdapter implements FitnessService {
 
     // constructor for GoogleFitAdapter
     public GoogleFitAdapter(MainActivity activity) {
+
         this.activity = activity;
+        dailyReader = new DataReader(activity,1,2);
+
     }
 
     // we need this for google fit
@@ -210,7 +215,7 @@ public class GoogleFitAdapter implements FitnessService {
 
     // get the update of daily step count
     public void update_daily_steps() {
-        dataReader();
+       // dataReader();
         GoogleSignInAccount lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(activity);
 
         // check if already signed in
@@ -218,8 +223,7 @@ public class GoogleFitAdapter implements FitnessService {
             return;
         }
 
-        DataReader reader = new DataReader(activity,1,2);
-        long total = reader.getDailyData();
+        long total = dailyReader.getDailyData();
         Log.d(TAG, "Total steps: " + total);
         activity.setStepCount(total);
         // Stores today's step count using sharedPreferences

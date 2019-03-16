@@ -210,6 +210,23 @@ public class DataReader implements ISubject<IReaderObserver> {
 
     }
 
+    public Task<DataReadResponse> getHistoryTask() {
+        GoogleSignInAccount lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(activity);
+
+        // check if already signed in
+        if (lastSignedInAccount == null) {
+            return null;
+        }
+        this.readRequest = new DataReadRequest.Builder()
+                .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
+                .bucketByTime(1, TimeUnit.DAYS)
+                .setTimeRange(start, end, TimeUnit.MILLISECONDS)
+                .build();
+
+        return Fitness.getHistoryClient(activity, lastSignedInAccount)
+                .readData(readRequest);
+    }
+
 
     @Override
     public void register(IReaderObserver observer) {

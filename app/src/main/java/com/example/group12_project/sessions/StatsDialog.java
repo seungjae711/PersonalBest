@@ -1,4 +1,4 @@
-package com.example.group12_project;
+package com.example.group12_project.sessions;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,7 +44,7 @@ public class StatsDialog extends AppCompatActivity {
 
     private void setSpeedText() {
         TextView avg_spd = findViewById(R.id.avg_spd);
-        avg_spd.setText(Long.toString(stats.getLong("speed", 0)));
+        avg_spd.setText(Float.toString(stats.getFloat("speed", 0)));
     }
 
     private void setStepsText() {
@@ -56,11 +56,29 @@ public class StatsDialog extends AppCompatActivity {
         String timeFormat;
         TextView time_elapsed = findViewById(R.id.time_elapsed);
         Long time = stats.getLong("time", 0);
-        timeFormat = Long.toString(time/3600); //hours
+
+        if (time/3600 < 10) {
+            timeFormat = "0" + Long.toString(time/3600); //hours
+        }
+        else {
+            timeFormat = Long.toString(time/3600); //hours
+        }
         time = time % 3600;
-        timeFormat = timeFormat + ":" + Long.toString(time/60); //minutes
+
+        if (time/60 < 10) {
+            timeFormat = timeFormat + ":0" + Long.toString(time / 60);
+        }
+        else {
+            timeFormat = timeFormat + ":" + Long.toString(time/60); //minutes
+        }
         time = time % 60;
-        timeFormat = timeFormat + ":" + Long.toString(time);
+
+        if (time < 10) {
+            timeFormat = timeFormat + ":0" + Long.toString(time);
+        }
+        else {
+            timeFormat = timeFormat + ":" + Long.toString(time);
+        }
         time_elapsed.setText(timeFormat);
     }
 

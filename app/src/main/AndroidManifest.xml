@@ -50,11 +50,14 @@
         <activity
             android:name=".HeightEmailManager"
             android:label="Height Manager"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".StatsDialog"
+
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".sessions.StatsDialog"
             android:label="Stats Dialog"
+
+
             android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>

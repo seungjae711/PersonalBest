@@ -30,9 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Map;
 
-import com.example.group12_project.fitness.FitnessService;
 import com.example.group12_project.friendlist.FriendListActivity;
 import com.example.group12_project.friendlist.LocalUser;
 import com.example.group12_project.friendlist.UserCloud;
@@ -64,8 +62,7 @@ public class MainActivity extends AppCompatActivity
     UserCloud userCloud;
     UserCloudMediator userCloudMediator;
 
-    //TODO delete mocking user id
-    String userid = "user2";
+    String userId;
 
 
     @Override
@@ -77,8 +74,10 @@ public class MainActivity extends AppCompatActivity
 
         /* create friend list objects */
 
+        SharedPreferences Email = getSharedPreferences("daily_stepCount", MODE_PRIVATE);
+        userId = Email.getString("email", "default_user");
         FirebaseApp.initializeApp(this);
-        localUser = new LocalUser(userid);
+        localUser = new LocalUser(userId);
         userCloud = new UserCloud(localUser.getId());
         userCloudMediator = new UserCloudMediator(localUser, userCloud);
         localUser.register(userCloudMediator);
@@ -290,10 +289,12 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
         SharedPreferences.Editor edit = storedGoal.edit();
         edit.putString("goal", "5");
+        localUser.setGoalManagement(this);
         localUser.setGoal("5");
+        userCloud.setUserId(localUser.getId());
         edit.putBoolean("firstStart", false);
         edit.apply();
-        Intent intent = new Intent(this, HeightManager.class);
+        Intent intent = new Intent(this, HeightEmailManager.class);
         startActivity(intent);
     }
 

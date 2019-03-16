@@ -73,11 +73,12 @@ public class LocalUser extends Application implements IUser {
         observers.remove(IUserObserver);
     }
 
-    /**
-     * getter method for user id
-     */
     public String getId() {
         return id;
+    }
+
+    public void setId(String email) {
+        id = email;
     }
 
     /**

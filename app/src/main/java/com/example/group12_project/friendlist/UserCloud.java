@@ -39,6 +39,10 @@ public class UserCloud implements ICloud {
         db = FirebaseFirestore.getInstance();
     }
 
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     /**
      * pass firestore instance
      */

@@ -116,11 +116,9 @@ public class GoalManagement extends AppCompatActivity {
             editor.apply();
 
             // notification for goal reached
-//            NotificationBuilder note = new NotificationBuilder(getApplicationContext(), "Goal Reached", "You have readched " + numGoal);
-//            note.createNotification();
-//        }).addOnFailureListener(error -> {
-//            Log.e(TAG, error.getLocalizedMessage());
-//        });
+            NotificationBuilder note = new NotificationBuilder(context, "Goal Reached", "You have readched " + numGoal, "01");
+            note.createNotification();
+
             return true;
         }
         return false;

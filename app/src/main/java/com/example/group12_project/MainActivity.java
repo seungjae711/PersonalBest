@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity
         // update height and goal to cloud
         SharedPreferences height = getSharedPreferences("height", MODE_PRIVATE);
         localUser.setHeight(height.getInt("height", -1));
-        localUser.setGoalManagement(this);
+        localUser.setGoalManagement(this, getApplicationContext());
         goalString = findViewById(R.id.goal_string);
         goal = findViewById(R.id.goal);
         localUser.goalManagement.updateGoal(goal);
@@ -316,7 +316,7 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences storedGoal = getSharedPreferences("storedGoal", MODE_PRIVATE);
         SharedPreferences.Editor edit = storedGoal.edit();
         edit.putString("goal", "5");
-        localUser.setGoalManagement(this);
+        localUser.setGoalManagement(this, getApplicationContext());
         localUser.setGoal("5");
         userCloud.setUserId(localUser.getId());
         edit.putBoolean("firstStart", false);

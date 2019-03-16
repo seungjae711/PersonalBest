@@ -12,9 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".friendlist.FriendDataDisplay"
+            android:label="@string/title_activity_friend_data_display"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".chat.chatActivity"
             android:label="@string/title_activity_chat"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".friendlist.FriendListActivity"
             android:label="Friends"
@@ -50,14 +54,11 @@
         <activity
             android:name=".HeightEmailManager"
             android:label="Height Manager"
-
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".sessions.StatsDialog"
-            android:label="Stats Dialog"
-
-
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity
+            android:name=".sessions.StatsDialog"
+            android:label="Stats Dialog"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

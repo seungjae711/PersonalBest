@@ -1,6 +1,7 @@
 package com.example.group12_project.chat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.example.group12_project.MainActivity;
 import com.example.group12_project.NotificationBuilder;
 import com.example.group12_project.R;
+import com.example.group12_project.friendlist.FriendDataDisplay;
 import com.example.group12_project.friendlist.FriendListActivity;
 import com.example.group12_project.friendlist.LocalUser;
 import com.example.group12_project.friendlist.UserCloud;
@@ -57,12 +59,17 @@ public class chatActivity extends AppCompatActivity {
 
     String opponentId;
 
+    FloatingActionButton checkActivityBtn;
+
     private final String Tag = "user id is ";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        checkActivityBtn = findViewById(R.id.check_data);
+
 
         opponentId = getIntent().getExtras().getString("userid");
 
@@ -75,6 +82,13 @@ public class chatActivity extends AppCompatActivity {
 
         final SharedPreferences sharedpreferences = getSharedPreferences("FirebaseLabApp", Context.MODE_PRIVATE);
 
+        checkActivityBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), FriendDataDisplay.class);
+                startActivity(intent);
+            }
+        });
 
         /**
          * put same message in both user's history
@@ -90,6 +104,8 @@ public class chatActivity extends AppCompatActivity {
                 .collection(localUser.getId());
 
         initMessageUpdateListener();
+
+
         send_button = findViewById(R.id.btn_send);
         send_button.setOnClickListener(view -> sendMessage());
 

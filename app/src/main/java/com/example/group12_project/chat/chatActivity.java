@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.group12_project.MainActivity;
+import com.example.group12_project.NotificationBuilder;
 import com.example.group12_project.R;
 import com.example.group12_project.friendlist.FriendListActivity;
 import com.example.group12_project.friendlist.LocalUser;
@@ -113,6 +114,8 @@ public class chatActivity extends AppCompatActivity {
 
         opponentChat.add(newMessage).addOnSuccessListener(result -> {
             messageView.setText("");
+            NotificationBuilder note = new NotificationBuilder(getApplicationContext(), "New message from " + opponentId, "Click to read message in Personal Best", "01");
+            note.createNotification();
         }).addOnFailureListener(error -> {
             Log.e(TAG, error.getLocalizedMessage());
         });

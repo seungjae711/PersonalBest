@@ -43,11 +43,14 @@ public class GoogleFitAdapter implements FitnessService {
     // for logging
     private final String TAG = "GoogleFitAdapter";
 
+    private DataReader dailyReader;
+
     // to link the activity with with adapter
     private MainActivity activity;
 
     // constructor for GoogleFitAdapter
     public GoogleFitAdapter(MainActivity activity) {
+        this.dailyReader = new DataReader(activity,1,2);
         this.activity = activity;
     }
 
@@ -214,8 +217,7 @@ public class GoogleFitAdapter implements FitnessService {
             return;
         }
 
-        DataReader reader = new DataReader(activity, 1, 2);
-        long total = reader.getDailyData();
+        long total = dailyReader.getDailyData();
         Log.d(TAG, "Total steps: " + total);
         activity.setStepCount(total);
         // Stores today's step count using sharedPreferences

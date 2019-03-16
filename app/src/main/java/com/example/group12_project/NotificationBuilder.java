@@ -18,12 +18,12 @@ public class NotificationBuilder {
     NotificationManager nManager;
 
     public NotificationBuilder(Context context, String textTitle, String textContent, String id) {
+        this.context = context;
         this.id = this.context.getString(R.string.channel_id); // default_channel_id
         this.title = this.context.getString(R.string.channel_name); // Default Channel
-        this.context = context;
         this.title = textTitle;
         this.content = textContent;
-        this.id = id;
+     //   this.id = id;
     }
 
     public void createNotification() {

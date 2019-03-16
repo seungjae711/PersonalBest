@@ -19,7 +19,7 @@ import java.io.Serializable;
 public class CustomGoal extends AppCompatActivity {
     public Button accept, cancel;
     public EditText custom;
-    double minSteps = 2000;
+    double minSteps = 300;
     double maxSteps = 30000;
     String custGoal = "";
     LocalUser localUser;

@@ -64,6 +64,10 @@ public class BarGraph {
 
 
       //  int size = Math.min(seshSteps.size(), allSteps.size());
+        if (seshSteps == null) {
+            Log.e(TAG, "empty array");
+            return;
+        }
         int size = seshSteps.length;
         Log.i(TAG, "Number of session bars: " + size);
         int max = 0;

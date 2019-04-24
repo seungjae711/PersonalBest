@@ -41,7 +41,7 @@ public class BarGraph {
                 = activity.getSharedPreferences("storedGoal", Context.MODE_PRIVATE);
 
         // check if goal is null
-        String goalValue = storedGoal.getString("goal", "");
+        String goalValue = storedGoal.getString("Goal", "");
         if (goalValue != null) {
             goals = Integer.parseInt(goalValue);
             Log.i(TAG, String.format("Goals got from shared preferences is %s", goals));
